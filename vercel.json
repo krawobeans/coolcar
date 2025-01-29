@@ -5,10 +5,6 @@
       "destination": "/index.html"
     }
   ],
-  "analytics": true,
-  "speedInsights": {
-    "enabled": true
-  },
   "github": {
     "enabled": true,
     "silent": true
