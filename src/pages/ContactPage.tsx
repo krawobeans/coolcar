@@ -12,7 +12,7 @@ export default function ContactPage() {
         keywords="contact mechanic Freetown, car garage contact, auto repair contact Sierra Leone"
       />
       
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 pt-28 md:pt-32">
         <div className="text-center mb-12">
           <h1 className="text-4xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-900 to-blue-600">
             Contact Us
@@ -81,12 +81,13 @@ export default function ContactPage() {
             <div className="mt-8">
               <div className="aspect-[4/3] w-full rounded-xl overflow-hidden">
                 <iframe
-                  src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3947.0459716318584!2d-13.2341667!3d8.4838889!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zOMKwMjknMDIuMCJOIDEzwrAxNCcwMy4wIlc!5e0!3m2!1sen!2ssl!4v1625764428486!5m2!1sen!2ssl"
+                  src="https://www.google.com/maps/embed?pb=!1m14!1m12!1m3!1d249.89435607718082!2d-13.141907177382976!3d8.409759476855601!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!5e1!3m2!1sen!2ssl!4v1738121511972!5m2!1sen!2ssl"
                   width="100%"
                   height="100%"
                   style={{ border: 0 }}
                   allowFullScreen
                   loading="lazy"
+                  referrerPolicy="no-referrer-when-downgrade"
                   className="rounded-lg"
                 ></iframe>
               </div>

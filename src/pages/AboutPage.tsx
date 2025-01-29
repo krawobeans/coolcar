@@ -5,9 +5,9 @@ import TestimonialSection from '../components/TestimonialSection';
 
 export default function AboutPage() {
   return (
-    <div className="min-h-screen bg-gradient-to-b from-gray-50 to-white">
+    <div className="min-h-screen bg-gradient-to-b from-gray-50 to-white pt-16 md:pt-20">
       {/* Content - Adjusted padding */}
-      <div className="relative z-10 pt-16">
+      <div className="relative z-10">
         <div className="max-w-6xl mx-auto px-4 sm:px-6">
           <h1 className="text-4xl lg:text-6xl font-bold text-center mb-8 text-transparent bg-clip-text bg-gradient-to-r from-blue-900 to-blue-600">
             About Us
@@ -67,11 +67,11 @@ export default function AboutPage() {
 
           {/* Journey Section */}
           <div className="mt-24 space-y-12 relative">
-            {/* Decorative shapes */}
-            <div className="absolute top-1/2 -left-10 w-72 h-72 bg-purple-100 rounded-full mix-blend-multiply filter blur-xl opacity-70 animate-blob animation-delay-4000"></div>
-            <div className="absolute top-1/2 -right-10 w-72 h-72 bg-blue-100 rounded-full mix-blend-multiply filter blur-xl opacity-70 animate-blob"></div>
+            {/* Decorative shapes - adjusted for mobile */}
+            <div className="absolute top-1/2 -left-4 sm:-left-10 w-36 sm:w-72 h-36 sm:h-72 bg-purple-100 rounded-full mix-blend-multiply filter blur-xl opacity-70 animate-blob animation-delay-4000"></div>
+            <div className="absolute top-1/2 -right-4 sm:-right-10 w-36 sm:w-72 h-36 sm:h-72 bg-blue-100 rounded-full mix-blend-multiply filter blur-xl opacity-70 animate-blob"></div>
             
-            <h2 className="text-3xl md:text-4xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-900 to-blue-600 text-center mb-16">Our Journey</h2>
+            <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-900 to-blue-600 text-center mb-12">Our Journey</h2>
             
             {/* Timeline Section */}
             <div className="relative">
@@ -79,19 +79,19 @@ export default function AboutPage() {
               <div className="absolute left-1/2 transform -translate-x-1/2 h-full w-0.5 bg-gradient-to-b from-blue-600 to-purple-600"></div>
 
               {/* Timeline Items */}
-              <div className="space-y-24">
+              <div className="space-y-12 sm:space-y-16 md:space-y-24">
                 {/* Establishment */}
                 <div className="relative group">
                   <div className="flex items-center justify-end md:justify-start md:ml-[50%] md:pl-12">
-                    <div className="w-full md:w-1/2">
+                    <div className="w-[45%] sm:w-[42%] md:w-1/2">
                       <div className="relative group">
-                        <div className="absolute -inset-1 bg-gradient-to-r from-blue-600 to-purple-600 rounded-2xl blur opacity-25 group-hover:opacity-75 transition duration-300"></div>
-                        <div className="relative bg-white p-8 rounded-2xl transform group-hover:scale-[1.02] transition-transform duration-300">
-                          <div className="absolute left-0 md:left-[-3.5rem] top-1/2 transform -translate-y-1/2 w-12 h-12 bg-gradient-to-r from-blue-600 to-purple-600 rounded-full flex items-center justify-center">
-                            <Star className="w-6 h-6 text-white animate-pulse" />
+                        <div className="absolute -inset-1 bg-gradient-to-r from-blue-600 to-purple-600 rounded-lg sm:rounded-xl md:rounded-2xl blur opacity-25 group-hover:opacity-75 transition duration-300"></div>
+                        <div className="relative bg-white p-3 sm:p-6 md:p-8 rounded-lg sm:rounded-xl md:rounded-2xl transform group-hover:scale-[1.02] transition-transform duration-300">
+                          <div className="absolute left-[-2rem] sm:left-[-2.5rem] md:left-[-3.5rem] top-1/2 transform -translate-y-1/2 w-8 h-8 sm:w-10 sm:h-10 md:w-12 md:h-12 bg-gradient-to-r from-blue-600 to-purple-600 rounded-full flex items-center justify-center">
+                            <Star className="w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6 text-white animate-pulse" />
                           </div>
-                          <h3 className="text-2xl font-bold text-blue-800 mb-4">Establishment</h3>
-                          <p className="text-gray-600">Founded in 2000 with a vision to provide exceptional auto repair services in Freetown.</p>
+                          <h3 className="text-lg sm:text-xl md:text-2xl font-bold text-blue-800 mb-2 md:mb-4">Establishment</h3>
+                          <p className="text-xs sm:text-sm md:text-base text-gray-600">Founded in 2000 with a vision to provide exceptional auto repair services in Freetown.</p>
                         </div>
                       </div>
                     </div>
@@ -101,15 +101,15 @@ export default function AboutPage() {
                 {/* Growth */}
                 <div className="relative group">
                   <div className="flex items-center justify-start md:justify-end md:mr-[50%] md:pr-12">
-                    <div className="w-full md:w-1/2">
+                    <div className="w-[45%] sm:w-[42%] md:w-1/2">
                       <div className="relative group">
-                        <div className="absolute -inset-1 bg-gradient-to-r from-purple-600 to-blue-600 rounded-2xl blur opacity-25 group-hover:opacity-75 transition duration-300"></div>
-                        <div className="relative bg-white p-8 rounded-2xl transform group-hover:scale-[1.02] transition-transform duration-300">
-                          <div className="absolute right-0 md:right-[-3.5rem] top-1/2 transform -translate-y-1/2 w-12 h-12 bg-gradient-to-r from-purple-600 to-blue-600 rounded-full flex items-center justify-center">
-                            <Wrench className="w-6 h-6 text-white animate-pulse" />
+                        <div className="absolute -inset-1 bg-gradient-to-r from-purple-600 to-blue-600 rounded-lg sm:rounded-xl md:rounded-2xl blur opacity-25 group-hover:opacity-75 transition duration-300"></div>
+                        <div className="relative bg-white p-3 sm:p-6 md:p-8 rounded-lg sm:rounded-xl md:rounded-2xl transform group-hover:scale-[1.02] transition-transform duration-300">
+                          <div className="absolute right-[-2rem] sm:right-[-2.5rem] md:right-[-3.5rem] top-1/2 transform -translate-y-1/2 w-8 h-8 sm:w-10 sm:h-10 md:w-12 md:h-12 bg-gradient-to-r from-purple-600 to-blue-600 rounded-full flex items-center justify-center">
+                            <Wrench className="w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6 text-white animate-pulse" />
                           </div>
-                          <h3 className="text-2xl font-bold text-blue-800 mb-4">Expansion</h3>
-                          <p className="text-gray-600">Expanded our facility and services to accommodate growing customer demand.</p>
+                          <h3 className="text-lg sm:text-xl md:text-2xl font-bold text-blue-800 mb-2 md:mb-4">Expansion</h3>
+                          <p className="text-xs sm:text-sm md:text-base text-gray-600">Expanded our facility and services to accommodate growing customer demand.</p>
                         </div>
                       </div>
                     </div>
@@ -119,15 +119,15 @@ export default function AboutPage() {
                 {/* Innovation */}
                 <div className="relative group">
                   <div className="flex items-center justify-end md:justify-start md:ml-[50%] md:pl-12">
-                    <div className="w-full md:w-1/2">
+                    <div className="w-[45%] sm:w-[42%] md:w-1/2">
                       <div className="relative group">
-                        <div className="absolute -inset-1 bg-gradient-to-r from-blue-600 to-purple-600 rounded-2xl blur opacity-25 group-hover:opacity-75 transition duration-300"></div>
-                        <div className="relative bg-white p-8 rounded-2xl transform group-hover:scale-[1.02] transition-transform duration-300">
-                          <div className="absolute left-0 md:left-[-3.5rem] top-1/2 transform -translate-y-1/2 w-12 h-12 bg-gradient-to-r from-blue-600 to-purple-600 rounded-full flex items-center justify-center">
-                            <Settings className="w-6 h-6 text-white animate-pulse" />
+                        <div className="absolute -inset-1 bg-gradient-to-r from-blue-600 to-purple-600 rounded-lg sm:rounded-xl md:rounded-2xl blur opacity-25 group-hover:opacity-75 transition duration-300"></div>
+                        <div className="relative bg-white p-3 sm:p-6 md:p-8 rounded-lg sm:rounded-xl md:rounded-2xl transform group-hover:scale-[1.02] transition-transform duration-300">
+                          <div className="absolute left-[-2rem] sm:left-[-2.5rem] md:left-[-3.5rem] top-1/2 transform -translate-y-1/2 w-8 h-8 sm:w-10 sm:h-10 md:w-12 md:h-12 bg-gradient-to-r from-blue-600 to-purple-600 rounded-full flex items-center justify-center">
+                            <Settings className="w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6 text-white animate-pulse" />
                           </div>
-                          <h3 className="text-2xl font-bold text-blue-800 mb-4">Innovation</h3>
-                          <p className="text-gray-600">Introduced state-of-the-art diagnostic equipment and modern repair techniques.</p>
+                          <h3 className="text-lg sm:text-xl md:text-2xl font-bold text-blue-800 mb-2 md:mb-4">Innovation</h3>
+                          <p className="text-xs sm:text-sm md:text-base text-gray-600">Introduced state-of-the-art diagnostic equipment and modern repair techniques.</p>
                         </div>
                       </div>
                     </div>
@@ -137,15 +137,15 @@ export default function AboutPage() {
                 {/* Present */}
                 <div className="relative group">
                   <div className="flex items-center justify-start md:justify-end md:mr-[50%] md:pr-12">
-                    <div className="w-full md:w-1/2">
+                    <div className="w-[45%] sm:w-[42%] md:w-1/2">
                       <div className="relative group">
-                        <div className="absolute -inset-1 bg-gradient-to-r from-purple-600 to-blue-600 rounded-2xl blur opacity-25 group-hover:opacity-75 transition duration-300"></div>
-                        <div className="relative bg-white p-8 rounded-2xl transform group-hover:scale-[1.02] transition-transform duration-300">
-                          <div className="absolute right-0 md:right-[-3.5rem] top-1/2 transform -translate-y-1/2 w-12 h-12 bg-gradient-to-r from-purple-600 to-blue-600 rounded-full flex items-center justify-center">
-                            <CheckCircle className="w-6 h-6 text-white animate-pulse" />
+                        <div className="absolute -inset-1 bg-gradient-to-r from-purple-600 to-blue-600 rounded-lg sm:rounded-xl md:rounded-2xl blur opacity-25 group-hover:opacity-75 transition duration-300"></div>
+                        <div className="relative bg-white p-3 sm:p-6 md:p-8 rounded-lg sm:rounded-xl md:rounded-2xl transform group-hover:scale-[1.02] transition-transform duration-300">
+                          <div className="absolute right-[-2rem] sm:right-[-2.5rem] md:right-[-3.5rem] top-1/2 transform -translate-y-1/2 w-8 h-8 sm:w-10 sm:h-10 md:w-12 md:h-12 bg-gradient-to-r from-purple-600 to-blue-600 rounded-full flex items-center justify-center">
+                            <CheckCircle className="w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6 text-white animate-pulse" />
                           </div>
-                          <h3 className="text-2xl font-bold text-blue-800 mb-4">Today</h3>
-                          <p className="text-gray-600">Leading auto repair service in Freetown with a reputation for excellence and reliability.</p>
+                          <h3 className="text-lg sm:text-xl md:text-2xl font-bold text-blue-800 mb-2 md:mb-4">Today</h3>
+                          <p className="text-xs sm:text-sm md:text-base text-gray-600">Leading auto repair service in Freetown with a reputation for excellence and reliability.</p>
                         </div>
                       </div>
                     </div>

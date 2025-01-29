@@ -37,8 +37,8 @@ export default function SEO({
     },
     geo: {
       '@type': 'GeoCoordinates',
-      latitude: 8.4838889,
-      longitude: -13.2341667
+      latitude: 8.409759476855601,
+      longitude: -13.141907177382976
     },
     openingHoursSpecification: [
       {
@@ -124,8 +124,8 @@ export default function SEO({
       {/* Local Business Meta Tags */}
       <meta name="geo.region" content="SL" />
       <meta name="geo.placename" content="Freetown" />
-      <meta name="geo.position" content="8.4838889;-13.2341667" />
-      <meta name="ICBM" content="8.4838889, -13.2341667" />
+      <meta name="geo.position" content="8.409759476855601;-13.141907177382976" />
+      <meta name="ICBM" content="8.409759476855601, -13.141907177382976" />
       
       {/* Language and Region */}
       <meta property="og:locale" content="en_SL" />
