@@ -80,7 +80,7 @@ export default function ServicesPage() {
   const testimonials = getTopRatedReviews(2);
 
   return (
-    <div className="relative min-h-screen bg-gradient-to-b from-gray-50 to-white overflow-hidden">
+    <div className="min-h-screen bg-gradient-to-b from-gray-50 to-white">
       {/* Background blobs */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
         <div 
@@ -111,7 +111,7 @@ export default function ServicesPage() {
 
       <div className="relative z-10">
         {/* Hero Section - Adjusted for mobile */}
-        <div className="pt-8 md:pt-16 pb-8 md:pb-16 relative overflow-hidden bg-transparent">
+        <div className="pt-28 md:pt-32 pb-8 md:pb-16 relative overflow-hidden bg-transparent">
           <div className="relative z-10 max-w-6xl mx-auto px-4 sm:px-6">
             <div className="flex flex-col lg:flex-row items-center gap-6 md:gap-8">
               <div className="flex-1 text-center lg:text-left">
