@@ -11,10 +11,10 @@ if (!rootElement) throw new Error('Failed to find the root element')
 
 ReactDOM.createRoot(rootElement).render(
   <React.StrictMode>
+    <Analytics />
+    <SpeedInsights />
     <Router>
       <App />
-      <Analytics />
-      <SpeedInsights />
     </Router>
   </React.StrictMode>,
 )
