@@ -1,10 +1,13 @@
-import React, { useState, FormEvent } from 'react';
+import React, { useState, FormEvent, useEffect } from 'react';
 import emailjs from '@emailjs/browser';
 import { Loader2, CheckCircle, AlertCircle } from 'lucide-react';
 
 const EMAILJS_SERVICE_ID = import.meta.env.VITE_EMAILJS_SERVICE_ID;
 const EMAILJS_TEMPLATE_ID = import.meta.env.VITE_EMAILJS_TEMPLATE_ID;
 const EMAILJS_PUBLIC_KEY = import.meta.env.VITE_EMAILJS_PUBLIC_KEY;
+
+// Initialize EmailJS
+emailjs.init(EMAILJS_PUBLIC_KEY);
 
 interface FormData {
   name: string;
@@ -41,6 +44,17 @@ export default function ContactForm() {
     setStatus({ submitting: true, submitted: false, error: null });
 
     try {
+      // Validate required fields
+      if (!formData.name || !formData.email || !formData.subject || !formData.message) {
+        throw new Error('Please fill in all required fields');
+      }
+
+      // Validate email format
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!emailRegex.test(formData.email)) {
+        throw new Error('Please enter a valid email address');
+      }
+
       await emailjs.send(
         EMAILJS_SERVICE_ID,
         EMAILJS_TEMPLATE_ID,
@@ -48,20 +62,28 @@ export default function ContactForm() {
           to_email: 'coolcarauto.info@gmail.com',
           from_name: formData.name,
           from_email: formData.email,
-          phone: formData.phone,
+          phone: formData.phone || 'Not provided',
           subject: formData.subject,
-          message: formData.message
+          message: formData.message,
+          reply_to: formData.email // Add this for better email threading
         },
         EMAILJS_PUBLIC_KEY
       );
 
       setStatus({ submitting: false, submitted: true, error: null });
       setFormData({ name: '', email: '', phone: '', subject: '', message: '' });
+
+      // Reset success message after 5 seconds
+      setTimeout(() => {
+        setStatus(prev => ({ ...prev, submitted: false }));
+      }, 5000);
+
     } catch (error) {
+      console.error('Contact form error:', error);
       setStatus({ 
         submitting: false, 
         submitted: false, 
-        error: 'Failed to send message. Please try again later.'
+        error: error instanceof Error ? error.message : 'Failed to send message. Please try again later.'
       });
     }
   };
