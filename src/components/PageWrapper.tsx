@@ -1,13 +1,12 @@
-import React, { ReactNode } from 'react';
+import React from 'react';
 
 interface PageWrapperProps {
-  children: ReactNode;
-  className?: string;
+  children: React.ReactNode;
 }
 
-export default function PageWrapper({ children, className = '' }: PageWrapperProps) {
+export default function PageWrapper({ children }: PageWrapperProps) {
   return (
-    <div className={`min-h-screen pt-16 md:pt-20 ${className}`}>
+    <div className="pt-[64px] sm:pt-[80px]"> {/* Fixed offset for navbar height */}
       {children}
     </div>
   );

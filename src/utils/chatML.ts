@@ -35,7 +35,50 @@ const contextPatterns = {
   booking: /\b(book|schedule|appointment|available|when|time)\b/i,
   pricing: /\b(cost|price|expensive|cheap|quote|estimate|fee)\b/i,
   parts: /\b(part|tire|brake|engine|transmission|battery|oil|filter)\b/i,
-  emergency: /\b(emergency|urgent|asap|quickly|stuck|broke|down)\b/i
+  emergency: /\b(emergency|urgent|asap|quickly|stuck|broke|down)\b/i,
+  warranty: /\b(warranty|guarantee|covered|protection|policy)\b/i,
+  technical: /\b(specs|specifications|manual|guide|how\s+to|steps)\b/i,
+  feedback: /\b(review|rating|experience|recommend|satisfied)\b/i
+};
+
+// Context-specific response enhancements
+const contextEnhancements = {
+  repair: {
+    prefix: "I understand you're having an issue that needs repair. ",
+    suffix: " Would you like to schedule a diagnostic appointment?"
+  },
+  maintenance: {
+    prefix: "Regular maintenance is key to vehicle longevity. ",
+    suffix: " Would you like to know our maintenance packages?"
+  },
+  booking: {
+    prefix: "I'll help you schedule a convenient appointment. ",
+    suffix: " We have several time slots available this week."
+  },
+  pricing: {
+    prefix: "I'll provide you with transparent pricing information. ",
+    suffix: " Would you like a detailed quote?"
+  },
+  parts: {
+    prefix: "We use high-quality OEM and aftermarket parts. ",
+    suffix: " Would you like to know more about our parts warranty?"
+  },
+  emergency: {
+    prefix: "I understand this is urgent. ",
+    suffix: " We can prioritize your service needs."
+  },
+  warranty: {
+    prefix: "Let me explain our warranty coverage. ",
+    suffix: " Would you like to see our warranty terms?"
+  },
+  technical: {
+    prefix: "I'll provide you with technical details. ",
+    suffix: " Would you like more specific information?"
+  },
+  feedback: {
+    prefix: "We value your feedback. ",
+    suffix: " Your input helps us improve our service."
+  }
 };
 
 // Store conversation patterns for learning
@@ -131,30 +174,36 @@ function findSimilarConversations(userMessage: string): ConversationPattern[] {
 export function getImprovedResponse(userMessage: string, defaultResponse: string): string {
   const similarPatterns = findSimilarConversations(userMessage);
   const analysis = analyzeSentiment(userMessage);
-
+  
+  // Get context-specific enhancements
+  const enhancement = contextEnhancements[analysis.context as keyof typeof contextEnhancements];
+  
   // If we have similar patterns with positive sentiment and matching context
   const relevantPatterns = similarPatterns.filter(p => 
     p.sentiment === 'positive' && p.context === analysis.context
   );
 
   if (relevantPatterns.length > 0) {
-    return relevantPatterns[Math.floor(Math.random() * relevantPatterns.length)].botResponse;
+    const response = relevantPatterns[Math.floor(Math.random() * relevantPatterns.length)].botResponse;
+    return enhancement 
+      ? `${enhancement.prefix}${response}${enhancement.suffix}`
+      : response;
   }
 
-  // Add context and sentiment-based response enhancement
-  const contextPrefix = analysis.context === 'emergency' 
-    ? "I'll help you right away. "
-    : analysis.context === 'pricing'
-    ? "Let me provide you with pricing information. "
-    : "";
+  // Add sentiment and context-based response enhancement
+  let response = defaultResponse;
+  
+  if (enhancement) {
+    response = `${enhancement.prefix}${response}${enhancement.suffix}`;
+  }
 
   if (analysis.sentiment === 'negative') {
-    return `${contextPrefix}I understand your concern regarding ${analysis.context}. ${defaultResponse} Is there anything specific I can clarify?`;
+    response = `I understand your concern${analysis.context ? ` regarding ${analysis.context}` : ''}. ${response} Is there anything specific I can clarify?`;
   } else if (analysis.sentiment === 'positive') {
-    return `${contextPrefix}I'm glad I can help with your ${analysis.context} inquiry! ${defaultResponse}`;
+    response = `I'm glad I can help${analysis.context ? ` with your ${analysis.context} inquiry` : ''}! ${response}`;
   }
 
-  return `${contextPrefix}${defaultResponse}`;
+  return response;
 }
 
 // Enhanced conversation insights with context analysis

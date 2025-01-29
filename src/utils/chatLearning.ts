@@ -62,6 +62,13 @@ interface GoogleSearchResult {
   source: string;
 }
 
+// Constants for local storage
+const STORAGE_KEYS = {
+  CONVERSATIONS: 'coolcar_conversations',
+  WEB_CACHE: 'coolcar_web_cache',
+  LAST_CLEANUP: 'coolcar_last_cleanup'
+};
+
 /**
  * Clean and normalize text for better matching
  */
@@ -96,6 +103,71 @@ function extractAutomotiveContent(text: string): string {
     .join('. ');
 }
 
+// Load conversations from local storage
+function loadFromStorage(): void {
+  try {
+    const stored = localStorage.getItem(STORAGE_KEYS.CONVERSATIONS);
+    if (stored) {
+      conversationMemory = JSON.parse(stored);
+    }
+    
+    const storedCache = localStorage.getItem(STORAGE_KEYS.WEB_CACHE);
+    if (storedCache) {
+      const parsed = JSON.parse(storedCache);
+      webKnowledgeCache.clear();
+      Object.entries(parsed).forEach(([key, value]) => {
+        webKnowledgeCache.set(key, value as WebLearningResult[]);
+      });
+    }
+  } catch (error) {
+    console.error('Error loading from storage:', error);
+  }
+}
+
+// Save conversations to local storage
+function saveToStorage(): void {
+  try {
+    localStorage.setItem(STORAGE_KEYS.CONVERSATIONS, JSON.stringify(conversationMemory));
+    
+    const cacheObj = Object.fromEntries(webKnowledgeCache.entries());
+    localStorage.setItem(STORAGE_KEYS.WEB_CACHE, JSON.stringify(cacheObj));
+  } catch (error) {
+    console.error('Error saving to storage:', error);
+  }
+}
+
+// Cleanup old data periodically (once per day)
+function cleanupStorage(): void {
+  try {
+    const lastCleanup = localStorage.getItem(STORAGE_KEYS.LAST_CLEANUP);
+    const now = Date.now();
+    if (!lastCleanup || now - parseInt(lastCleanup) > 24 * 60 * 60 * 1000) {
+      // Remove conversations older than 30 days
+      const thirtyDaysAgo = now - 30 * 24 * 60 * 60 * 1000;
+      conversationMemory = conversationMemory.filter(
+        conv => new Date(conv.timestamp).getTime() > thirtyDaysAgo
+      );
+      
+      // Clear old cache entries
+      const cacheEntries = Array.from(webKnowledgeCache.entries());
+      cacheEntries.forEach(([key, value]) => {
+        if (value.some(result => !result.content.trim())) {
+          webKnowledgeCache.delete(key);
+        }
+      });
+      
+      saveToStorage();
+      localStorage.setItem(STORAGE_KEYS.LAST_CLEANUP, now.toString());
+    }
+  } catch (error) {
+    console.error('Error during storage cleanup:', error);
+  }
+}
+
+// Initialize storage on module load
+loadFromStorage();
+cleanupStorage();
+
 /**
  * Store a conversation for future learning
  */
@@ -117,6 +189,9 @@ export function storeConversation(
   if (conversationMemory.length > 1000) {
     conversationMemory = conversationMemory.slice(-1000);
   }
+  
+  // Save to local storage
+  saveToStorage();
 }
 
 /**

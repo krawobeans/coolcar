@@ -3,12 +3,53 @@ import {
   findSimilarConversations, 
   learnFromWeb 
 } from './chatLearning';
+import {
+  getCurrentBooking,
+  getCurrentStep,
+  incrementStep,
+  updateBookingInfo,
+  getNextRequiredField,
+  validateField,
+  createBooking,
+  getFieldPrompt,
+  formatBookingDetails,
+  getAvailableSlots,
+  requiredFields,
+  ServiceBooking
+} from './serviceBooking';
+import { BotPattern } from './types';
+import { bookingPatterns, parseDate, parseTime } from './bookingPatterns';
+import { getAIResponse, enhanceResponse, isAutomotiveRelated } from './aiService';
 
-interface BotPattern {
-  pattern: RegExp;
-  responses: string[];
-  followUp?: string;
-  context?: string;
+// Common repair procedures and estimated durations
+const repairServices = {
+  oilChange: {
+    duration: '30-45 minutes',
+    includes: ['Oil filter replacement', 'Synthetic oil', 'Multi-point inspection'],
+    maintenance_interval: '5,000-7,500 km'
+  },
+  brakeService: {
+    duration: '1-2 hours',
+    includes: ['Pad replacement', 'Rotor inspection', 'Brake fluid check'],
+    maintenance_interval: '20,000-25,000 km'
+  },
+  wheelAlignment: {
+    duration: '45-60 minutes',
+    includes: ['Four-wheel alignment', 'Tire pressure check', 'Suspension inspection'],
+    maintenance_interval: '15,000-20,000 km'
+  },
+  transmission: {
+    duration: '2-4 hours',
+    includes: ['Fluid change', 'Filter replacement', 'Pan cleaning'],
+    maintenance_interval: '40,000-60,000 km'
+  }
+};
+
+// Add personality to responses
+function addPersonality(response: string): string {
+  const emojis = ['🚗', '🔧', '👨‍🔧', '👍', '😊'];
+  const emoji = emojis[Math.floor(Math.random() * emojis.length)];
+  return Math.random() > 0.7 ? `${response} ${emoji}` : response;
 }
 
 // Car brands and models database
@@ -35,41 +76,39 @@ const carBrands = {
   }
 };
 
-// Common repair procedures and estimated durations
-const repairServices = {
-  oilChange: {
-    duration: '30-45 minutes',
-    includes: ['Oil filter replacement', 'Synthetic oil', 'Multi-point inspection'],
-    maintenance_interval: '5,000-7,500 km'
-  },
-  brakeService: {
-    duration: '1-2 hours',
-    includes: ['Pad replacement', 'Rotor inspection', 'Brake fluid check'],
-    maintenance_interval: '20,000-25,000 km'
-  },
-  wheelAlignment: {
-    duration: '45-60 minutes',
-    includes: ['Four-wheel alignment', 'Tire pressure check', 'Suspension inspection'],
-    maintenance_interval: '15,000-20,000 km'
-  },
-  transmission: {
-    duration: '2-4 hours',
-    includes: ['Fluid change', 'Filter replacement', 'Pan cleaning'],
-    maintenance_interval: '40,000-60,000 km'
-  }
-};
-
 const carProblems = {
   engine: {
-    symptoms: ['not starting', 'stalling', 'rough idle', 'check engine light', 'knocking', 'ticking', 'misfire', 'power loss', 'overheating'],
+    symptoms: [
+      'not starting', 'stalling', 'rough idle', 'check engine light', 'knocking',
+      'ticking', 'misfire', 'power loss', 'overheating', 'hard to start',
+      'smoking exhaust', 'burning smell', 'poor acceleration', 'vibration',
+      'loud noise', 'backfiring', 'high fuel consumption'
+    ],
     solutions: [
-      'This could be related to the fuel system, battery, or engine components.',
-      'We recommend bringing your car in for a diagnostic check.',
-      'Our technicians can perform a comprehensive engine inspection.',
-      'This might require electronic diagnostic testing to identify the exact issue.'
+      "This could be related to the fuel system, battery, or engine components.",
+      "We recommend bringing your car in for a diagnostic check.",
+      "Our technicians can perform a comprehensive engine inspection.",
+      "This might require electronic diagnostic testing to identify the exact issue.",
+      "We'll perform a complete engine health check to pinpoint the problem.",
+      "Our advanced diagnostic tools can help identify the root cause quickly."
     ],
     urgency: 'high',
-    diagnostic_steps: ['Computer diagnostic scan', 'Compression test', 'Fuel pressure test']
+    diagnostic_steps: [
+      'Computer diagnostic scan',
+      'Compression test',
+      'Fuel pressure test',
+      'Spark plug inspection',
+      'Vacuum leak test',
+      'Emissions analysis',
+      'Battery load test'
+    ],
+    maintenance_tips: [
+      'Regular oil changes',
+      'Clean air filter',
+      'Use recommended fuel grade',
+      'Check coolant levels',
+      'Monitor warning lights'
+    ]
   },
   brakes: {
     symptoms: ['squeaking', 'grinding', 'soft pedal', 'vibration', 'pulling', 'pulsating', 'longer stopping distance', 'brake warning light'],
@@ -94,26 +133,96 @@ const carProblems = {
     diagnostic_steps: ['Transmission fluid check', 'Computer diagnostic scan', 'Road test']
   },
   electrical: {
-    symptoms: ['battery dead', 'lights flickering', 'not charging', 'electrical failure', 'warning lights', 'starter problems', 'alternator noise'],
+    symptoms: [
+      'battery dead', 'lights flickering', 'not charging', 'electrical failure',
+      'warning lights', 'starter problems', 'alternator noise', 'dim lights',
+      'slow crank', 'radio issues', 'power windows slow', 'fuses blowing',
+      'battery light on', 'no power accessories'
+    ],
     solutions: [
-      'Electrical issues can be complex and require diagnostic testing.',
-      'We have advanced equipment to test electrical systems.',
-      'Our technicians are experienced with automotive electrical systems.',
-      'We can perform a complete electrical system diagnosis.'
+      "Electrical issues can be complex and require diagnostic testing.",
+      "We have advanced equipment to test electrical systems.",
+      "Our technicians are experienced with automotive electrical systems.",
+      "We can perform a complete electrical system diagnosis.",
+      "We'll check all electrical components including alternator and starter.",
+      "Our diagnostic tools can identify intermittent electrical issues."
     ],
     urgency: 'medium',
-    diagnostic_steps: ['Battery load test', 'Alternator output test', 'Circuit testing']
+    diagnostic_steps: [
+      'Battery load test',
+      'Alternator output test',
+      'Circuit testing',
+      'Starter system check',
+      'Computer system scan',
+      'Voltage drop test',
+      'Ground connection check'
+    ],
+    maintenance_tips: [
+      'Regular battery checks',
+      'Clean battery terminals',
+      'Check charging system',
+      'Inspect wiring condition',
+      'Monitor battery age'
+    ]
+  },
+  cooling: {
+    symptoms: [
+      'overheating', 'coolant leak', 'sweet smell', 'steam from hood',
+      'temperature gauge high', 'coolant low', 'radiator noise', 'heater not working',
+      'coolant mixing with oil', 'radiator fan not working'
+    ],
+    solutions: [
+      "Cooling system issues can lead to serious engine damage if not addressed.",
+      "We can perform pressure testing to locate any leaks.",
+      "Our technicians will inspect all cooling system components.",
+      "We'll check the radiator, water pump, and thermostat."
+    ],
+    urgency: 'high',
+    diagnostic_steps: [
+      'Cooling system pressure test',
+      'Thermostat check',
+      'Fan operation test',
+      'Coolant level and condition check',
+      'Head gasket inspection',
+      'Water pump inspection'
+    ],
+    maintenance_tips: [
+      'Regular coolant flushes',
+      'Check coolant levels',
+      'Inspect hoses and clamps',
+      'Monitor temperature gauge',
+      'Keep radiator clean'
+    ]
   },
   suspension: {
-    symptoms: ['bouncing', 'uneven tire wear', 'nose diving', 'swaying', 'rough ride', 'clunking noise', 'steering wheel vibration'],
+    symptoms: [
+      'bouncing', 'uneven tire wear', 'nose diving', 'swaying', 'rough ride',
+      'clunking noise', 'steering wheel vibration', 'pulling to one side',
+      'squeaking over bumps', 'knocking sounds', 'poor handling'
+    ],
     solutions: [
-      'This could indicate worn suspension components.',
-      'We can perform a thorough suspension inspection.',
-      'Our alignment equipment can identify suspension issues.',
-      'Regular suspension maintenance ensures safe handling.'
+      "This could indicate worn suspension components.",
+      "We can perform a thorough suspension inspection.",
+      "Our alignment equipment can identify suspension issues.",
+      "Regular suspension maintenance ensures safe handling.",
+      "We'll check all suspension components for wear and damage."
     ],
     urgency: 'medium',
-    diagnostic_steps: ['Suspension component inspection', 'Alignment check', 'Shock/strut test']
+    diagnostic_steps: [
+      'Suspension component inspection',
+      'Alignment check',
+      'Shock/strut test',
+      'Ball joint inspection',
+      'Bushing inspection',
+      'Tire wear analysis'
+    ],
+    maintenance_tips: [
+      'Regular alignment checks',
+      'Rotate tires regularly',
+      'Check tire pressure',
+      'Inspect shocks/struts',
+      'Listen for unusual noises'
+    ]
   }
 };
 
@@ -341,8 +450,29 @@ const botPatterns: BotPattern[] = [
       "Everyone has their dream car! What's yours?"
     ],
     context: 'casual'
+  },
+  {
+    pattern: /\b(book|schedule|appointment|booking)\s+(service|maintenance|repair)\b/i,
+    responses: [
+      "I'll help you book a service appointment. Let's get started with your details.",
+      "I can assist you with scheduling a service. I'll need some information from you.",
+      "Let's get your service appointment scheduled. I'll guide you through the process."
+    ],
+    context: 'booking_start'
+  },
+  {
+    pattern: /\b(cancel|stop|abort)\s+(booking|appointment|scheduling)\b/i,
+    responses: [
+      "I've cancelled the booking process. Let me know if you'd like to start over.",
+      "Booking process cancelled. Is there anything else I can help you with?",
+      "I've stopped the scheduling process. Feel free to start again when you're ready."
+    ],
+    context: 'booking_cancel'
   }
 ];
+
+// Add booking patterns to main patterns array
+botPatterns.push(...bookingPatterns);
 
 function findMatchingPattern(message: string): BotPattern | null {
   return botPatterns.find(pattern => pattern.pattern.test(message)) || null;
@@ -386,13 +516,98 @@ export async function generateBotResponse(message: string): Promise<string> {
   const carBrand = findCarBrand(message);
   const serviceInfo = getServiceInfo(message);
   
-  // Add personality to responses
-  const addPersonality = (response: string) => {
-    const emojis = ['🚗', '🔧', '👨‍🔧', '👍', '😊'];
-    const emoji = emojis[Math.floor(Math.random() * emojis.length)];
-    return Math.random() > 0.7 ? `${response} ${emoji}` : response;
-  };
-
+  // Check if we're in the middle of a booking
+  const currentBooking = getCurrentBooking();
+  const nextField = getNextRequiredField();
+  
+  // Handle booking start
+  if (pattern?.context === 'booking_start' || 
+      message.toLowerCase().includes('book') || 
+      message.toLowerCase().includes('appointment')) {
+    if (!currentBooking || Object.keys(currentBooking).length === 0) {
+      updateBookingInfo('status', 'pending');
+      return getFieldPrompt('customerName');
+    }
+  }
+  
+  if (nextField && Object.keys(currentBooking).length > 0) {
+    // We're in the middle of a booking process
+    if (message.toLowerCase().includes('cancel') || message.toLowerCase().includes('stop')) {
+      updateBookingInfo('status', 'cancelled');
+      return "I've cancelled the booking process. Let me know if you'd like to start over.";
+    }
+    
+    let processedValue = message;
+    
+    // Special handling for date and time fields
+    if (nextField === 'preferredDate') {
+      const date = parseDate(message);
+      if (date) {
+        if (date < new Date()) {
+          return "I'm sorry, but that date is in the past. Please provide a future date.";
+        }
+        processedValue = date.toISOString();
+      } else {
+        return "I couldn't understand that date format. Please try again with a format like 'tomorrow', 'next Monday', or 'MM/DD/YYYY'.";
+      }
+    } else if (nextField === 'preferredTime') {
+      const time = parseTime(message);
+      if (time) {
+        const [hours] = time.split(':').map(Number);
+        if (hours < 8 || hours >= 18) {
+          return "I'm sorry, but we're only open from 8 AM to 6 PM. Please choose a time during business hours.";
+        }
+        processedValue = time;
+      } else {
+        return "I couldn't understand that time format. Please provide a time in 24-hour format (e.g., '14:00') or 12-hour format (e.g., '2:00 pm').";
+      }
+    }
+    
+    // Validate and store the provided information
+    if (validateField(nextField, processedValue)) {
+      updateBookingInfo(nextField, processedValue);
+      incrementStep();
+      
+      // Check if booking is complete
+      const booking = createBooking();
+      if (booking) {
+        return `Great! I've completed your booking. Here are the details:\n\n${formatBookingDetails(booking)}\n\nWe'll contact you to confirm the appointment. Is there anything else you need?`;
+      }
+      
+      // Get next field prompt
+      const nextPrompt = getFieldPrompt(getNextRequiredField()!);
+      return nextPrompt;
+    } else {
+      return `I'm sorry, that doesn't seem to be a valid ${nextField}. ${getFieldPrompt(nextField)}`;
+    }
+  }
+  
+  // Try AI response first
+  try {
+    const aiResponse = await getAIResponse(message);
+    console.log('AI Response received:', aiResponse);
+    
+    if (aiResponse) {
+      const isRelated = isAutomotiveRelated(aiResponse);
+      console.log('Is automotive related?', isRelated);
+      
+      if (isRelated) {
+        const context = pattern?.context || 'general';
+        console.log('Enhancing response with context:', context);
+        const enhancedResponse = enhanceResponse(aiResponse, context);
+        console.log('Enhanced response:', enhancedResponse);
+        storeConversation(message, enhancedResponse, context);
+        return addPersonality(enhancedResponse);
+      } else {
+        console.log('AI response was not automotive related, falling back to default responses');
+      }
+    } else {
+      console.log('No AI response received, falling back to default responses');
+    }
+  } catch (error) {
+    console.error('AI response error:', error);
+  }
+  
   // Try to find similar conversations first
   const context = pattern?.context || 'general';
   const similarConversations = findSimilarConversations(message, context);

@@ -1,5 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import PageWrapper from './PageWrapper';
 import { 
   Wrench, 
   AlertCircle, 
@@ -72,51 +73,53 @@ const services = [
 
 export default function Services() {
   return (
-    <section className="mt-16 pt-40 md:pt-32 pb-16 px-4 md:px-8 bg-gray-50">
-      <div className="max-w-7xl mx-auto">
-        <div className="text-center mb-12">
-          <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
-            Our Services
-          </h2>
-          <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-            Professional auto repair and maintenance services to keep your vehicle running at its best.
-          </p>
-        </div>
+    <PageWrapper>
+      <section className="bg-gray-50">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-24 pb-12">
+          <div className="text-center mb-12">
+            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
+              Our Services
+            </h2>
+            <p className="text-lg text-gray-600 max-w-2xl mx-auto">
+              Professional auto repair and maintenance services to keep your vehicle running at its best.
+            </p>
+          </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {services.map((service, index) => (
-            <Link 
-              key={index}
-              to={service.link}
-              className="bg-white p-6 rounded-xl shadow-md hover:shadow-lg transition-shadow duration-300"
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {services.map((service, index) => (
+              <Link 
+                key={index}
+                to={service.link}
+                className="bg-white p-6 rounded-xl shadow-md hover:shadow-lg transition-shadow duration-300"
+              >
+                <div className="flex items-start space-x-4">
+                  <div className="flex-shrink-0">
+                    <service.icon className="w-8 h-8 text-blue-600" />
+                  </div>
+                  <div>
+                    <h3 className="text-xl font-semibold text-gray-900 mb-2">
+                      {service.title}
+                    </h3>
+                    <p className="text-gray-600">
+                      {service.description}
+                    </p>
+                  </div>
+                </div>
+              </Link>
+            ))}
+          </div>
+
+          <div className="mt-12 text-center">
+            <Link
+              to="/booking"
+              className="inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 transition-colors duration-300"
             >
-              <div className="flex items-start space-x-4">
-                <div className="flex-shrink-0">
-                  <service.icon className="w-8 h-8 text-blue-600" />
-                </div>
-                <div>
-                  <h3 className="text-xl font-semibold text-gray-900 mb-2">
-                    {service.title}
-                  </h3>
-                  <p className="text-gray-600">
-                    {service.description}
-                  </p>
-                </div>
-              </div>
+              <Wrench className="w-5 h-5 mr-2" />
+              Book a Service
             </Link>
-          ))}
+          </div>
         </div>
-
-        <div className="mt-12 text-center">
-          <Link
-            to="/booking"
-            className="inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 transition-colors duration-300"
-          >
-            <Wrench className="w-5 h-5 mr-2" />
-            Book a Service
-          </Link>
-        </div>
-      </div>
-    </section>
+      </section>
+    </PageWrapper>
   );
 } 
