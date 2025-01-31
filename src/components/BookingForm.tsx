@@ -3,7 +3,7 @@ import emailjs from '@emailjs/browser';
 import { Calendar, Clock, Car, User, Mail, Phone, MessageSquare, Wrench, Loader2, CheckCircle, AlertCircle } from 'lucide-react';
 
 const EMAILJS_SERVICE_ID = import.meta.env.VITE_EMAILJS_SERVICE_ID;
-const EMAILJS_TEMPLATE_ID = import.meta.env.VITE_EMAILJS_BOOKING_TEMPLATE_ID;
+const EMAILJS_BOOKING_TEMPLATE_ID = import.meta.env.VITE_EMAILJS_BOOKING_TEMPLATE_ID;
 const EMAILJS_PUBLIC_KEY = import.meta.env.VITE_EMAILJS_PUBLIC_KEY;
 
 // Initialize EmailJS
@@ -69,7 +69,7 @@ export default function BookingForm() {
 
       await emailjs.send(
         EMAILJS_SERVICE_ID,
-        EMAILJS_TEMPLATE_ID,
+        EMAILJS_BOOKING_TEMPLATE_ID,
         {
           to_email: 'coolcarauto.info@gmail.com',
           from_name: formData.name,
