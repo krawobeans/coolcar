@@ -33,8 +33,7 @@ export default function HomePage() {
         title="Best Car Repair Service in Freetown"
         description="Professional auto repair services in Freetown. Expert mechanics for all car brands, including Toyota, Mercedes, and BMW. Visit our modern facility for top-quality car maintenance."
         keywords="car repair Freetown, best mechanic Sierra Leone, auto service Freetown, car maintenance Sierra Leone"
-        url="www.coolcarautorepairgarage.com
-"
+        url="www.coolcarautorepairgarage.com"
         image="/porsche logo 1.webp"
       />
       <div className="min-h-screen flex flex-col pt-16 md:pt-20">
@@ -98,7 +97,7 @@ export default function HomePage() {
                 <div className="w-full lg:w-1/2 lg:pl-6">
                   <div className="relative group">
                     <div className="absolute inset-0 bg-gradient-to-r from-blue-200 to-purple-200 rounded-3xl opacity-70 blur-2xl transform group-hover:scale-105 transition-transform duration-500"></div>
-                    <img src="/porsche cayenne.png" alt="Porsche Cayenne" className="relative w-full h-auto object-contain transform group-hover:scale-105 transition-transform duration-500 drop-shadow-2xl" />
+                    <img src="/porsche logo 1.webp" alt="Porsche Logo" className="relative w-full h-auto object-contain transform group-hover:scale-105 transition-transform duration-500 drop-shadow-2xl" />
                   </div>
                 </div>
               </div>
