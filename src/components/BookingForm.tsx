@@ -1,13 +1,10 @@
-import React, { useState, FormEvent } from 'react';
+import React, { useState, FormEvent, useEffect } from 'react';
 import emailjs from '@emailjs/browser';
 import { Calendar, Clock, Car, User, Mail, Phone, MessageSquare, Wrench, Loader2, CheckCircle, AlertCircle } from 'lucide-react';
 
 const EMAILJS_SERVICE_ID = import.meta.env.VITE_EMAILJS_SERVICE_ID;
 const EMAILJS_BOOKING_TEMPLATE_ID = import.meta.env.VITE_EMAILJS_BOOKING_TEMPLATE_ID;
 const EMAILJS_PUBLIC_KEY = import.meta.env.VITE_EMAILJS_PUBLIC_KEY;
-
-// Initialize EmailJS
-emailjs.init(EMAILJS_PUBLIC_KEY);
 
 interface FormData {
   name: string;
@@ -28,7 +25,19 @@ interface FormStatus {
   error: string | null;
 }
 
+// Initialize EmailJS with useEffect to ensure it runs on the client side
 export default function BookingForm() {
+  useEffect(() => {
+    try {
+      emailjs.init(EMAILJS_PUBLIC_KEY);
+      console.log('EmailJS initialized with public key:', EMAILJS_PUBLIC_KEY);
+      console.log('Service ID:', EMAILJS_SERVICE_ID);
+      console.log('Template ID:', EMAILJS_BOOKING_TEMPLATE_ID);
+    } catch (error) {
+      console.error('Error initializing EmailJS:', error);
+    }
+  }, []);
+
   const [formData, setFormData] = useState<FormData>({
     name: '',
     email: '',
@@ -67,7 +76,13 @@ export default function BookingForm() {
         throw new Error('Please enter a valid email address');
       }
 
-      await emailjs.send(
+      console.log('Sending email with config:', {
+        serviceId: EMAILJS_SERVICE_ID,
+        templateId: EMAILJS_BOOKING_TEMPLATE_ID,
+        publicKey: EMAILJS_PUBLIC_KEY
+      });
+
+      const response = await emailjs.send(
         EMAILJS_SERVICE_ID,
         EMAILJS_BOOKING_TEMPLATE_ID,
         {
@@ -86,6 +101,8 @@ export default function BookingForm() {
         },
         EMAILJS_PUBLIC_KEY
       );
+
+      console.log('EmailJS response:', response);
 
       setStatus({ submitting: false, submitted: true, error: null });
       setFormData({
@@ -107,7 +124,7 @@ export default function BookingForm() {
       }, 5000);
 
     } catch (error) {
-      console.error('Booking form error:', error);
+      console.error('Booking form error details:', error);
       setStatus({ 
         submitting: false, 
         submitted: false, 
