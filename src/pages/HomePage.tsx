@@ -35,7 +35,7 @@ export default function HomePage() {
         keywords="car repair Freetown, best mechanic Sierra Leone, auto service Freetown, car maintenance Sierra Leone"
         url="www.coolcarautorepairgarage.com
 "
-        image="/porsche logo.webp"
+        image="/porsche logo 1.webp"
       />
       <div className="min-h-screen flex flex-col pt-16 md:pt-20">
         <div className="relative z-10">
