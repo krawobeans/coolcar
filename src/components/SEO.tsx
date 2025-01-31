@@ -31,7 +31,7 @@ export default function SEO({
     telephone: '+23278590287',
     address: {
       '@type': 'PostalAddress',
-      streetAddress: '156 Bai Bureh Road',
+      streetAddress: '563 Bai Bureh Road Allen Town Furniture',
       addressLocality: 'Freetown',
       addressRegion: 'Western Area',
       postalCode: '00232',
