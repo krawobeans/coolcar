@@ -1,7 +1,6 @@
 import { 
   storeConversation, 
-  findSimilarConversations, 
-  learnFromWeb 
+  findSimilarConversations
 } from './chatLearning';
 import {
   getCurrentBooking,
@@ -510,169 +509,40 @@ function getServiceInfo(service: string) {
   return serviceKey ? repairServices[serviceKey] : null;
 }
 
-export async function generateBotResponse(message: string): Promise<string> {
-  const pattern = findMatchingPattern(message);
-  const carProblem = findCarProblem(message);
-  const carBrand = findCarBrand(message);
-  const serviceInfo = getServiceInfo(message);
-  
-  // Check if we're in the middle of a booking
-  const currentBooking = getCurrentBooking();
-  const nextField = getNextRequiredField();
-  
-  // Handle booking start
-  if (pattern?.context === 'booking_start' || 
-      message.toLowerCase().includes('book') || 
-      message.toLowerCase().includes('appointment')) {
-    if (!currentBooking || Object.keys(currentBooking).length === 0) {
-      updateBookingInfo('status', 'pending');
-      return getFieldPrompt('customerName');
-    }
-  }
-  
-  if (nextField && Object.keys(currentBooking).length > 0) {
-    // We're in the middle of a booking process
-    if (message.toLowerCase().includes('cancel') || message.toLowerCase().includes('stop')) {
-      updateBookingInfo('status', 'cancelled');
-      return "I've cancelled the booking process. Let me know if you'd like to start over.";
-    }
-    
-    let processedValue = message;
-    
-    // Special handling for date and time fields
-    if (nextField === 'preferredDate') {
-      const date = parseDate(message);
-      if (date) {
-        if (date < new Date()) {
-          return "I'm sorry, but that date is in the past. Please provide a future date.";
-        }
-        processedValue = date.toISOString();
-      } else {
-        return "I couldn't understand that date format. Please try again with a format like 'tomorrow', 'next Monday', or 'MM/DD/YYYY'.";
-      }
-    } else if (nextField === 'preferredTime') {
-      const time = parseTime(message);
-      if (time) {
-        const [hours] = time.split(':').map(Number);
-        if (hours < 8 || hours >= 18) {
-          return "I'm sorry, but we're only open from 8 AM to 6 PM. Please choose a time during business hours.";
-        }
-        processedValue = time;
-      } else {
-        return "I couldn't understand that time format. Please provide a time in 24-hour format (e.g., '14:00') or 12-hour format (e.g., '2:00 pm').";
-      }
-    }
-    
-    // Validate and store the provided information
-    if (validateField(nextField, processedValue)) {
-      updateBookingInfo(nextField, processedValue);
-      incrementStep();
-      
-      // Check if booking is complete
-      const booking = createBooking();
-      if (booking) {
-        return `Great! I've completed your booking. Here are the details:\n\n${formatBookingDetails(booking)}\n\nWe'll contact you to confirm the appointment. Is there anything else you need?`;
-      }
-      
-      // Get next field prompt
-      const nextPrompt = getFieldPrompt(getNextRequiredField()!);
-      return nextPrompt;
-    } else {
-      return `I'm sorry, that doesn't seem to be a valid ${nextField}. ${getFieldPrompt(nextField)}`;
-    }
-  }
-  
-  // Try AI response first
+export const getInitialGreeting = (): string => {
+  const greetings = [
+    "Welcome to Cool Car Auto Garage! How can we help you today?",
+    "Hello! Looking to service your car? We're here to help!",
+    "Hi there! Need help with your vehicle? Just ask!",
+  ];
+  return greetings[Math.floor(Math.random() * greetings.length)];
+};
+
+// Process user message and generate response
+export async function processMessage(message: string): Promise<string> {
   try {
+    // Check for similar conversations in memory
+    const similarConversations = findSimilarConversations(message, 'general');
+    
+    if (similarConversations.length > 0) {
+      // Use the most relevant previous conversation
+      const bestMatch = similarConversations[0];
+      storeConversation(message, bestMatch.answer, 'general');
+      return addPersonality(bestMatch.answer);
+    }
+
+    // If no similar conversation found, use AI service
     const aiResponse = await getAIResponse(message);
-    console.log('AI Response received:', aiResponse);
-    
     if (aiResponse) {
-      const isRelated = isAutomotiveRelated(aiResponse);
-      console.log('Is automotive related?', isRelated);
-      
-      if (isRelated) {
-        const context = pattern?.context || 'general';
-        console.log('Enhancing response with context:', context);
-        const enhancedResponse = enhanceResponse(aiResponse, context);
-        console.log('Enhanced response:', enhancedResponse);
-        storeConversation(message, enhancedResponse, context);
-        return addPersonality(enhancedResponse);
-      } else {
-        console.log('AI response was not automotive related, falling back to default responses');
-      }
-    } else {
-      console.log('No AI response received, falling back to default responses');
+      const enhancedResponse = enhanceResponse(aiResponse, 'general');
+      storeConversation(message, enhancedResponse, 'general');
+      return addPersonality(enhancedResponse);
     }
+
+    // Fallback response
+    return "I'm sorry, I couldn't understand that. Could you please rephrase your question?";
   } catch (error) {
-    console.error('AI response error:', error);
-  }
-  
-  // Try to find similar conversations first
-  const context = pattern?.context || 'general';
-  const similarConversations = findSimilarConversations(message, context);
-  
-  // If we have a very similar previous conversation, use that response
-  const bestMatch = similarConversations[0];
-  if (bestMatch && (bestMatch as any).similarity > 0.8) {
-    storeConversation(message, bestMatch.answer, context);
-    return addPersonality(bestMatch.answer);
-  }
-
-  // Try to learn from web
-  try {
-    const webResults = await learnFromWeb(message);
-    if (webResults.length > 0) {
-      const bestResult = webResults[0];
-      const response = bestResult.content;
-      storeConversation(message, response, context, 'neutral');
-      return addPersonality(response);
-    }
-  } catch (error) {
-    console.error('Error learning from web:', error);
-  }
-  
-  // Fall back to standard responses if no learned response available
-  let response: string;
-  
-  if (carProblem) {
-    const solution = carProblem.solutions[Math.floor(Math.random() * carProblem.solutions.length)];
-    const urgencyMessage = carProblem.urgency === 'high' ? 
-      " This issue requires immediate attention." : 
-      " We recommend addressing this soon.";
-    response = `${solution}${urgencyMessage} Would you like to schedule an inspection? Our diagnostic process includes: ${carProblem.steps.join(', ')}.`;
-  } else if (carBrand) {
-    response = `We specialize in ${carBrand.brand.toUpperCase()} vehicles, including all ${carBrand.models.join(', ')} models. Our technicians are certified in ${carBrand.specialties.join(', ')}. How can we help with your ${carBrand.brand}?`;
-  } else if (serviceInfo) {
-    response = `This service typically takes ${serviceInfo.duration} and includes ${serviceInfo.includes.join(', ')}. The recommended maintenance interval is ${serviceInfo.maintenance_interval}. Would you like to schedule this service?`;
-  } else if (pattern) {
-    response = pattern.responses[Math.floor(Math.random() * pattern.responses.length)];
-    if (pattern.followUp) {
-      response = `${response} ${pattern.followUp}`;
-    }
-  } else {
-    const defaultResponses = [
-      "I'm here to help with your automotive needs and happy to chat! Could you tell me more about what's on your mind?",
-      "I'd love to help you! Could you provide more details about what you're looking for?",
-      "I'm all ears! What can I help you with today?",
-      "Let's figure this out together! What would you like to know more about?"
-    ];
-    response = defaultResponses[Math.floor(Math.random() * defaultResponses.length)];
-  }
-
-  // Store the conversation for future learning
-  storeConversation(message, response, context, 'neutral');
-  
-  return addPersonality(response);
-}
-
-export function getInitialGreeting(): string {
-  const hour = new Date().getHours();
-  if (hour < 12) {
-    return "Good morning! Welcome to Cool Car Auto Garage. How can I assist you today?";
-  } else if (hour < 17) {
-    return "Good afternoon! Welcome to Cool Car Auto Garage. How can I help you?";
-  } else {
-    return "Good evening! Welcome to Cool Car Auto Garage. How may I assist you?";
+    console.error('Error processing message:', error);
+    return "I apologize, but I'm having trouble processing your request right now. Please try again later.";
   }
 } 

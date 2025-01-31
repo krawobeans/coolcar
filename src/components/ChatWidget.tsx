@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef, lazy, Suspense } from 'react';
 import { X, Send, BarChart, MessageSquare } from 'lucide-react';
-import { generateBotResponse, getInitialGreeting } from '../utils/chatbot';
+import { processMessage, getInitialGreeting } from '../utils/chatbot';
 import type { Message, ConversationInsights } from '../utils/chatAnalytics';
 import { getConversationInsights } from '../utils/chatAnalytics';
 
@@ -81,7 +81,7 @@ const ChatWidget: React.FC<ChatWidgetProps> = React.memo(({ onClose }) => {
     setIsTyping(true);
 
     try {
-      const response = await generateBotResponse(inputMessage);
+      const response = await processMessage(inputMessage);
       const botMessage: Message = {
         id: Date.now(),
         text: response,

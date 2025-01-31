@@ -1,35 +1,28 @@
-import { Routes, Route, useLocation } from 'react-router-dom';
-import { useEffect } from 'react';
-import HomePage from '../pages/HomePage';
-import AboutPage from '../pages/AboutPage';
-import ServicesPage from '../pages/ServicesPage';
-import ReviewsPage from '../pages/ReviewsPage';
-import ContactPage from '../pages/ContactPage';
-import BookingPage from '../pages/BookingPage';
+import React, { Suspense } from 'react';
+import { Routes, Route } from 'react-router-dom';
+import LoadingSpinner from '../components/LoadingSpinner';
 
-// ScrollToTop component
-function ScrollToTop() {
-  const { pathname } = useLocation();
+// Lazy load route components
+const HomePage = React.lazy(() => import('../pages/HomePage'));
+const AboutPage = React.lazy(() => import('../pages/AboutPage'));
+const ServicesPage = React.lazy(() => import('../pages/ServicesPage'));
+const ContactPage = React.lazy(() => import('../pages/ContactPage'));
+const ReviewsPage = React.lazy(() => import('../pages/ReviewsPage'));
+const BookingPage = React.lazy(() => import('../pages/BookingPage'));
 
-  useEffect(() => {
-    window.scrollTo(0, 0);
-  }, [pathname]);
-
-  return null;
-}
-
-export default function AppRoutes() {
+function AppRoutes() {
   return (
-    <>
-      <ScrollToTop />
+    <Suspense fallback={<LoadingSpinner />}>
       <Routes>
         <Route path="/" element={<HomePage />} />
         <Route path="/about" element={<AboutPage />} />
         <Route path="/services" element={<ServicesPage />} />
-        <Route path="/reviews" element={<ReviewsPage />} />
         <Route path="/contact" element={<ContactPage />} />
+        <Route path="/reviews" element={<ReviewsPage />} />
         <Route path="/booking" element={<BookingPage />} />
       </Routes>
-    </>
+    </Suspense>
   );
-} 
+}
+
+export default AppRoutes; 
