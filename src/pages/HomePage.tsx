@@ -33,8 +33,9 @@ export default function HomePage() {
         title="Best Car Repair Service in Freetown"
         description="Professional auto repair services in Freetown. Expert mechanics for all car brands, including Toyota, Mercedes, and BMW. Visit our modern facility for top-quality car maintenance."
         keywords="car repair Freetown, best mechanic Sierra Leone, auto service Freetown, car maintenance Sierra Leone"
-        url="https://coolcarautogarage.com"
-        image="/hero-garage-image.webp"
+        url="www.coolcarautorepairgarage.com
+"
+        image="/porsche logo.webp"
       />
       <div className="min-h-screen flex flex-col pt-16 md:pt-20">
         <div className="relative z-10">
