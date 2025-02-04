@@ -143,7 +143,7 @@ export default function ServicesPage() {
               <div className="flex-1 relative group">
                 <div className="absolute inset-0 bg-gradient-to-r from-blue-100 to-purple-100 rounded-3xl opacity-60 blur-2xl transform group-hover:scale-105 transition-transform duration-500"></div>
                 <img 
-                  src="public/landcruiser-logo.webp" 
+                  src="/landcruiser logo.webp" 
                   alt="Toyota Land Cruiser" 
                   className="relative w-full h-auto max-w-sm md:max-w-md lg:max-w-lg mx-auto transform group-hover:scale-105 transition-transform duration-500 drop-shadow-xl"
                 />
