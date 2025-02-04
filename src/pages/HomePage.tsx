@@ -31,7 +31,7 @@ export default function HomePage() {
     <>
       <SEO 
         title="Best Car Repair Service in Freetown"
-        description="Professional auto repair services in Freetown. Expert mechanics for all car brands, including Toyota, Mercedes, and BMW. Visit our modern facility for top-quality car maintenance."
+        description="Professional auto repair services in Freetown. Expert mechanics for all car brands, including Toyota, Mercedes, Nissan, Honda, Volkswagen, Audi, Subaru, Hyundai, Kia, Lexus, Mazda, Mitsubishi, Peugeot, Renault, Skoda, Suzuki, Volvo, Land Rover, Jeep, Chrysler, Dodge, Ford, GMC, Chevrolet, Cadillac, Buick, Lincoln, Infiniti, Acura, Lexus, Honda, Toyota, Nissan, Mazda, Subaru, Mitsubishi, Kia, Hyundai, Volkswagen, Audi, BMW, Mercedes-Benz, Porsche, Volvo, Land Rover, Jeep, Chrysler, Dodge, Ford, GMC, Chevrolet, Cadillac, Buick, Lincoln, Infiniti, Acura, and more. Visit our modern facility for top-quality car maintenance."
         keywords="car repair Freetown, best mechanic Sierra Leone, auto service Freetown, car maintenance Sierra Leone"
         url="www.coolcarautorepairgarage.com"
         image="/porsche logo 1.webp"
@@ -194,7 +194,7 @@ export default function HomePage() {
                         <h3 className="text-xl font-semibold text-transparent bg-clip-text bg-gradient-to-r from-blue-900 to-blue-600 mb-1">
                           Location
                         </h3>
-                        <p className="text-gray-600 text-lg">No. 156 Bai Bureh Road, Freetown</p>
+                        <p className="text-gray-600 text-lg">563 Bai Bureh Road, Allen Town Furniture, Freetown</p>
                       </div>
                     </div>
                     <div className="flex items-center space-x-6 group">
@@ -205,7 +205,7 @@ export default function HomePage() {
                         <h3 className="text-xl font-semibold text-transparent bg-clip-text bg-gradient-to-r from-blue-900 to-blue-600 mb-1">
                           Phone
                         </h3>
-                        <p className="text-gray-600 text-lg">+232 99 123456</p>
+                        <p className="text-gray-600 text-lg">+232 78590287</p>
                       </div>
                     </div>
                     <div className="flex items-center space-x-6 group">
@@ -216,7 +216,7 @@ export default function HomePage() {
                         <h3 className="text-xl font-semibold text-transparent bg-clip-text bg-gradient-to-r from-blue-900 to-blue-600 mb-1">
                           Email
                         </h3>
-                        <p className="text-gray-600 text-lg">info@coolcarautogarage.com</p>
+                        <p className="text-gray-600 text-lg">coolcarauto.info@gmail.com</p>
                       </div>
                     </div>
                   </div>

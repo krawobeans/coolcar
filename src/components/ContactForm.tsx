@@ -1,156 +1,111 @@
-import React, { useState, FormEvent, useEffect } from 'react';
-import emailjs from '@emailjs/browser';
+import { useState, FormEvent } from 'react';
 import { Loader2, CheckCircle, AlertCircle } from 'lucide-react';
 
-const EMAILJS_SERVICE_ID = import.meta.env.VITE_EMAILJS_SERVICE_ID;
-const EMAILJS_TEMPLATE_ID = import.meta.env.VITE_EMAILJS_TEMPLATE_ID;
-const EMAILJS_PUBLIC_KEY = import.meta.env.VITE_EMAILJS_PUBLIC_KEY;
-
-// Initialize EmailJS
-emailjs.init(EMAILJS_PUBLIC_KEY);
-
-interface FormData {
-  name: string;
-  email: string;
-  phone: string;
-  subject: string;
-  message: string;
-}
-
-interface FormStatus {
-  submitting: boolean;
-  submitted: boolean;
-  error: string | null;
-}
-
 export default function ContactForm() {
-  const [formData, setFormData] = useState<FormData>({
-    name: '',
-    email: '',
-    phone: '',
-    subject: '',
-    message: ''
-  });
-
-  const [status, setStatus] = useState<FormStatus>({
+  const [status, setStatus] = useState({
     submitting: false,
     submitted: false,
-    error: null
+    error: null as string | null
   });
 
-  const handleSubmit = async (e: FormEvent) => {
+  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    
     setStatus({ submitting: true, submitted: false, error: null });
 
     try {
-      // Validate required fields
-      if (!formData.name || !formData.email || !formData.subject || !formData.message) {
-        throw new Error('Please fill in all required fields');
-      }
+      const form = e.currentTarget;
+      const formData = new FormData(form);
 
-      // Validate email format
-      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-      if (!emailRegex.test(formData.email)) {
-        throw new Error('Please enter a valid email address');
-      }
+      const response = await fetch('https://formsubmit.co/ajax/ahmadbahofficial@gmail.com', {
+        method: 'POST',
+        headers: { 'Accept': 'application/json' },
+        body: formData
+      });
 
-      await emailjs.send(
-        EMAILJS_SERVICE_ID,
-        EMAILJS_TEMPLATE_ID,
-        {
-          to_email: 'coolcarauto.info@gmail.com',
-          from_name: formData.name,
-          from_email: formData.email,
-          phone: formData.phone || 'Not provided',
-          subject: formData.subject,
-          message: formData.message,
-          reply_to: formData.email // Add this for better email threading
-        },
-        EMAILJS_PUBLIC_KEY
-      );
+      if (!response.ok) throw new Error('Failed to send message');
 
       setStatus({ submitting: false, submitted: true, error: null });
-      setFormData({ name: '', email: '', phone: '', subject: '', message: '' });
+      form.reset();
 
-      // Reset success message after 5 seconds
       setTimeout(() => {
         setStatus(prev => ({ ...prev, submitted: false }));
       }, 5000);
 
     } catch (error) {
-      console.error('Contact form error:', error);
       setStatus({ 
         submitting: false, 
         submitted: false, 
-        error: error instanceof Error ? error.message : 'Failed to send message. Please try again later.'
+        error: 'Failed to send message. Please try again.' 
       });
     }
   };
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-6">
+    <form 
+      onSubmit={handleSubmit}
+      action="https://formsubmit.co/ahmadbahofficial@gmail.com"
+      method="POST"
+      className="space-y-6"
+    >
+      <input type="hidden" name="_template" value="table" />
+      <input type="hidden" name="_subject" value="New Contact Form Submission" />
+      <input type="hidden" name="_captcha" value="false" />
+
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         <div>
           <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-1">
-            Full Name *
+            Name *
           </label>
           <input
             type="text"
             id="name"
+            name="name"
             required
-            value={formData.name}
-            onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-            placeholder="John Doe"
+            className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            placeholder="Your name"
           />
         </div>
-        
+
         <div>
           <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1">
-            Email Address *
+            Email *
           </label>
           <input
             type="email"
             id="email"
+            name="email"
             required
-            value={formData.email}
-            onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-            placeholder="john@example.com"
+            className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            placeholder="your.email@example.com"
           />
         </div>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <div>
-          <label htmlFor="phone" className="block text-sm font-medium text-gray-700 mb-1">
-            Phone Number
-          </label>
-          <input
-            type="tel"
-            id="phone"
-            value={formData.phone}
-            onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
-            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-            placeholder="+232 99 123456"
-          />
-        </div>
-        
-        <div>
-          <label htmlFor="subject" className="block text-sm font-medium text-gray-700 mb-1">
-            Subject *
-          </label>
-          <input
-            type="text"
-            id="subject"
-            required
-            value={formData.subject}
-            onChange={(e) => setFormData({ ...formData, subject: e.target.value })}
-            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-            placeholder="Service Inquiry"
-          />
-        </div>
+      <div>
+        <label htmlFor="phone" className="block text-sm font-medium text-gray-700 mb-1">
+          Phone (Optional)
+        </label>
+        <input
+          type="tel"
+          id="phone"
+          name="phone"
+          className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+          placeholder="Your phone number"
+        />
+      </div>
+
+      <div>
+        <label htmlFor="subject" className="block text-sm font-medium text-gray-700 mb-1">
+          Subject *
+        </label>
+        <input
+          type="text"
+          id="subject"
+          name="subject"
+          required
+          className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+          placeholder="What is this about?"
+        />
       </div>
 
       <div>
@@ -159,20 +114,19 @@ export default function ContactForm() {
         </label>
         <textarea
           id="message"
+          name="message"
           required
-          value={formData.message}
-          onChange={(e) => setFormData({ ...formData, message: e.target.value })}
           rows={4}
-          className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-          placeholder="How can we help you?"
-        />
+          className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+          placeholder="Your message here..."
+        ></textarea>
       </div>
 
       <div className="flex items-center justify-between">
         <button
           type="submit"
           disabled={status.submitting}
-          className="inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-md text-white bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed"
+          className="inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed"
         >
           {status.submitting ? (
             <>

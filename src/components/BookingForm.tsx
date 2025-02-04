@@ -1,143 +1,58 @@
-import React, { useState, FormEvent, useEffect } from 'react';
-import emailjs from '@emailjs/browser';
+import { useState, FormEvent } from 'react';
 import { Calendar, Clock, Car, User, Mail, Phone, MessageSquare, Wrench, Loader2, CheckCircle, AlertCircle } from 'lucide-react';
 
-const EMAILJS_SERVICE_ID = import.meta.env.VITE_EMAILJS_SERVICE_ID;
-const EMAILJS_BOOKING_TEMPLATE_ID = import.meta.env.VITE_EMAILJS_BOOKING_TEMPLATE_ID;
-const EMAILJS_PUBLIC_KEY = import.meta.env.VITE_EMAILJS_PUBLIC_KEY;
-
-interface FormData {
-  name: string;
-  email: string;
-  phone: string;
-  carMake: string;
-  carModel: string;
-  carYear: string;
-  serviceType: string;
-  preferredDate: string;
-  preferredTime: string;
-  message: string;
-}
-
-interface FormStatus {
-  submitting: boolean;
-  submitted: boolean;
-  error: string | null;
-}
-
-// Initialize EmailJS with useEffect to ensure it runs on the client side
 export default function BookingForm() {
-  useEffect(() => {
-    try {
-      emailjs.init(EMAILJS_PUBLIC_KEY);
-      console.log('EmailJS initialized with public key:', EMAILJS_PUBLIC_KEY);
-      console.log('Service ID:', EMAILJS_SERVICE_ID);
-      console.log('Template ID:', EMAILJS_BOOKING_TEMPLATE_ID);
-    } catch (error) {
-      console.error('Error initializing EmailJS:', error);
-    }
-  }, []);
-
-  const [formData, setFormData] = useState<FormData>({
-    name: '',
-    email: '',
-    phone: '',
-    carMake: '',
-    carModel: '',
-    carYear: '',
-    serviceType: '',
-    preferredDate: '',
-    preferredTime: '',
-    message: ''
-  });
-
-  const [status, setStatus] = useState<FormStatus>({
+  const [status, setStatus] = useState({
     submitting: false,
     submitted: false,
-    error: null
+    error: null as string | null
   });
 
-  const handleSubmit = async (e: FormEvent) => {
+  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    
     setStatus({ submitting: true, submitted: false, error: null });
 
     try {
-      // Validate required fields
-      if (!formData.name || !formData.email || !formData.phone || !formData.carMake || 
-          !formData.carModel || !formData.carYear || !formData.serviceType || 
-          !formData.preferredDate || !formData.preferredTime) {
-        throw new Error('Please fill in all required fields');
-      }
+      const form = e.currentTarget;
+      const formData = new FormData(form);
 
-      // Validate email format
-      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-      if (!emailRegex.test(formData.email)) {
-        throw new Error('Please enter a valid email address');
-      }
-
-      console.log('Sending email with config:', {
-        serviceId: EMAILJS_SERVICE_ID,
-        templateId: EMAILJS_BOOKING_TEMPLATE_ID,
-        publicKey: EMAILJS_PUBLIC_KEY
+      const response = await fetch('https://formsubmit.co/ajax/ahmadbahofficial@gmail.com', {
+        method: 'POST',
+        headers: { 'Accept': 'application/json' },
+        body: formData
       });
 
-      const response = await emailjs.send(
-        EMAILJS_SERVICE_ID,
-        EMAILJS_BOOKING_TEMPLATE_ID,
-        {
-          to_email: 'coolcarauto.info@gmail.com',
-          from_name: formData.name,
-          from_email: formData.email,
-          phone: formData.phone,
-          car_make: formData.carMake,
-          car_model: formData.carModel,
-          car_year: formData.carYear,
-          service_type: formData.serviceType,
-          preferred_date: formData.preferredDate,
-          preferred_time: formData.preferredTime,
-          message: formData.message || 'No additional message',
-          reply_to: formData.email
-        },
-        EMAILJS_PUBLIC_KEY
-      );
-
-      console.log('EmailJS response:', response);
+      if (!response.ok) throw new Error('Failed to send booking request');
 
       setStatus({ submitting: false, submitted: true, error: null });
-      setFormData({
-        name: '',
-        email: '',
-        phone: '',
-        carMake: '',
-        carModel: '',
-        carYear: '',
-        serviceType: '',
-        preferredDate: '',
-        preferredTime: '',
-        message: ''
-      });
+      form.reset();
 
-      // Reset success message after 5 seconds
       setTimeout(() => {
         setStatus(prev => ({ ...prev, submitted: false }));
       }, 5000);
 
     } catch (error) {
-      console.error('Booking form error details:', error);
       setStatus({ 
         submitting: false, 
         submitted: false, 
-        error: error instanceof Error ? error.message : 'Failed to send booking request. Please try again later.'
+        error: 'Failed to send booking request. Please try again.' 
       });
     }
   };
 
-  // Get today's date for min date in date picker
   const today = new Date().toISOString().split('T')[0];
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-6">
+    <form 
+      onSubmit={handleSubmit}
+      action="https://formsubmit.co/coolcarauto.info@gmail.com"
+      method="POST"
+      className="space-y-6"
+    >
+      <input type="hidden" name="_template" value="table" />
+      <input type="hidden" name="_subject" value="New Service Booking Request" />
+      <input type="hidden" name="_captcha" value="false" />
+
       {/* Personal Information */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         <div className="group">
@@ -149,10 +64,9 @@ export default function BookingForm() {
           </label>
           <input
             type="text"
+            name="name"
             required
-            value={formData.name}
-            onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-            className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-300 hover:border-blue-500"
+            className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
             placeholder="John Doe"
           />
         </div>
@@ -165,10 +79,9 @@ export default function BookingForm() {
           </label>
           <input
             type="email"
+            name="email"
             required
-            value={formData.email}
-            onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-            className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-300 hover:border-blue-500"
+            className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
             placeholder="john@example.com"
           />
         </div>
@@ -176,21 +89,20 @@ export default function BookingForm() {
           <label className="block text-sm font-medium text-gray-700 mb-1">
             <span className="flex items-center group-hover:text-blue-600 transition-colors">
               <Phone className="w-4 h-4 mr-1" />
-              Phone Number *
+              Phone *
             </span>
           </label>
           <input
             type="tel"
+            name="phone"
             required
-            value={formData.phone}
-            onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
-            className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-300 hover:border-blue-500"
-            placeholder="+232 78 123456"
+            className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            placeholder="Your phone number"
           />
         </div>
       </div>
 
-      {/* Vehicle Information */}
+      {/* Car Information */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         <div className="group">
           <label className="block text-sm font-medium text-gray-700 mb-1">
@@ -201,10 +113,9 @@ export default function BookingForm() {
           </label>
           <input
             type="text"
+            name="car_make"
             required
-            value={formData.carMake}
-            onChange={(e) => setFormData({ ...formData, carMake: e.target.value })}
-            className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-300 hover:border-blue-500"
+            className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
             placeholder="Toyota"
           />
         </div>
@@ -217,11 +128,10 @@ export default function BookingForm() {
           </label>
           <input
             type="text"
+            name="car_model"
             required
-            value={formData.carModel}
-            onChange={(e) => setFormData({ ...formData, carModel: e.target.value })}
-            className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-300 hover:border-blue-500"
-            placeholder="Land Cruiser"
+            className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            placeholder="Camry"
           />
         </div>
         <div className="group">
@@ -233,12 +143,11 @@ export default function BookingForm() {
           </label>
           <input
             type="number"
+            name="car_year"
             required
             min="1900"
             max={new Date().getFullYear() + 1}
-            value={formData.carYear}
-            onChange={(e) => setFormData({ ...formData, carYear: e.target.value })}
-            className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-300 hover:border-blue-500"
+            className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
             placeholder="2020"
           />
         </div>
@@ -253,10 +162,9 @@ export default function BookingForm() {
           </span>
         </label>
         <select
+          name="service_type"
           required
-          value={formData.serviceType}
-          onChange={(e) => setFormData({ ...formData, serviceType: e.target.value })}
-          className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-300 hover:border-blue-500"
+          className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
         >
           <option value="">Select a service</option>
           <option value="Oil Change">Oil Change</option>
@@ -281,11 +189,10 @@ export default function BookingForm() {
           </label>
           <input
             type="date"
+            name="preferred_date"
             required
             min={today}
-            value={formData.preferredDate}
-            onChange={(e) => setFormData({ ...formData, preferredDate: e.target.value })}
-            className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-300 hover:border-blue-500"
+            className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
           />
         </div>
         <div className="group">
@@ -296,10 +203,9 @@ export default function BookingForm() {
             </span>
           </label>
           <select
+            name="preferred_time"
             required
-            value={formData.preferredTime}
-            onChange={(e) => setFormData({ ...formData, preferredTime: e.target.value })}
-            className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-300 hover:border-blue-500"
+            className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
           >
             <option value="">Select a time</option>
             <option value="8:00 AM">8:00 AM</option>
@@ -325,10 +231,9 @@ export default function BookingForm() {
           </span>
         </label>
         <textarea
-          value={formData.message}
-          onChange={(e) => setFormData({ ...formData, message: e.target.value })}
+          name="message"
           rows={4}
-          className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-300 hover:border-blue-500"
+          className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
           placeholder="Any additional details about your service request..."
         />
       </div>
@@ -337,7 +242,7 @@ export default function BookingForm() {
         <button
           type="submit"
           disabled={status.submitting}
-          className="inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-md text-white bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed"
+          className="inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed"
         >
           {status.submitting ? (
             <>

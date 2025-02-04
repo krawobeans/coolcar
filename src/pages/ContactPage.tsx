@@ -1,4 +1,3 @@
-import React from 'react';
 import SEO from '../components/SEO';
 import ContactForm from '../components/ContactForm';
 import { MapPin, Phone, Mail, Clock } from 'lucide-react';
@@ -18,7 +17,7 @@ export default function ContactPage() {
             Contact Us
           </h1>
           <p className="mt-4 text-xl text-gray-600">
-            We're here to help with all your automotive needs
+            We're here to help with all your automotive needs in Freetown, Sierra Leone
           </p>
         </div>
 
@@ -34,7 +33,7 @@ export default function ContactPage() {
                 </div>
                 <div>
                   <h3 className="text-lg font-medium text-gray-900">Our Location</h3>
-                  <p className="mt-1 text-gray-600">156 Bai Bureh Road, Freetown, Sierra Leone</p>
+                  <p className="mt-1 text-gray-600">563 Bai Bureh Road, Allen Town Furniture, Freetown, Sierra Leone</p>
                 </div>
               </div>
 

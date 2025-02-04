@@ -44,7 +44,7 @@ function calculateSimilarity(str1: string, str2: string): number {
 /**
  * Extract relevant automotive content from text
  */
-function extractAutomotiveContent(text: string): string {
+export function extractAutomotiveContent(text: string): string {
   const sentences = text.split(/[.!?]+/);
   return sentences
     .filter(sentence => 

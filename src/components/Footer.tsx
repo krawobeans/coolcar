@@ -110,7 +110,7 @@ export default function Footer() {
             <ul className="space-y-4">
               <li className="flex items-start space-x-3 text-gray-600">
                 <MapPin className="w-5 h-5 text-blue-600 flex-shrink-0 mt-0.5" />
-                <span className="text-sm">No. 156 Bai Bureh Road, Freetown, Sierra Leone</span>
+                <span className="text-sm">563 Bai Bureh Road, Allen Town Furniture Freetown, Sierra Leone</span>
               </li>
               <li className="flex items-center space-x-3 text-gray-600">
                 <Phone className="w-5 h-5 text-blue-600 flex-shrink-0" />

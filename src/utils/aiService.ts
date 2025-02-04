@@ -1,111 +1,111 @@
-const COHERE_API_URL = 'https://api.cohere.ai/v1/chat';
-const API_KEY = import.meta.env.VITE_COHERE_API_KEY;
-const MAX_RETRIES = 3;
-const RETRY_DELAY = 2000; // 2 seconds
+// CHATBOT TEMPORARILY DISABLED DUE TO API MAINTENANCE
 
-const SYSTEM_PROMPT = `You are an automotive expert assistant at Cool Car Auto Garage. 
-Your responses should be:
-- Professional and knowledgeable about cars and automotive maintenance
-- Focused on helping customers understand their vehicle needs
-- Include specific, accurate technical information when relevant
-- Encourage proper vehicle maintenance and safety
-- Aim to guide customers towards booking services when appropriate
+/*
+import axios from 'axios';
 
-Always maintain a helpful, friendly tone while providing accurate automotive advice.`;
+const DEEPSEEK_API_KEY = process.env.VITE_DEEPSEEK_API_KEY;
+const DEEPSEEK_API_URL = 'https://api.deepseek.com/v1/chat/completions';
 
-async function sleep(ms: number) {
-  return new Promise(resolve => setTimeout(resolve, ms));
+// Types for DeepSeek AI responses
+interface DeepSeekMessage {
+  role: 'system' | 'user' | 'assistant';
+  content: string;
 }
 
+interface DeepSeekResponse {
+  id: string;
+  choices: {
+    message: DeepSeekMessage;
+    finish_reason: string;
+  }[];
+}
+
+// System prompt for automotive context
+const SYSTEM_PROMPT = `You are an expert automotive service assistant at Cool Car Auto Garage.
+Your knowledge covers:
+- Car maintenance and repairs
+- Diagnostics and troubleshooting
+- Service scheduling and recommendations
+- Vehicle specifications and features
+- Brand-specific expertise
+
+Provide helpful, professional responses while maintaining a friendly tone.
+Focus on automotive-related queries and guide users toward proper vehicle care.`;
+
+// Keep track of conversation history
+let conversationHistory: DeepSeekMessage[] = [
+  { role: 'system', content: SYSTEM_PROMPT }
+];
+
+// Clear conversation history
+export const clearConversation = () => {
+  conversationHistory = [{ role: 'system', content: SYSTEM_PROMPT }];
+};
+
+// Get AI response using DeepSeek API
 export async function getAIResponse(message: string): Promise<string | null> {
-  if (!API_KEY) {
-    console.error('Cohere API key not found in environment variables');
+  try {
+    if (!DEEPSEEK_API_KEY) {
+      console.error('DeepSeek API key not found');
+      return null;
+    }
+
+    // Add user message to history
+    conversationHistory.push({ role: 'user', content: message });
+
+    // Prepare API request
+    const response = await axios.post<DeepSeekResponse>(
+      DEEPSEEK_API_URL,
+      {
+        model: 'deepseek-chat',
+        messages: conversationHistory,
+        temperature: 0.7,
+        max_tokens: 500
+      },
+      {
+        headers: {
+          'Authorization': `Bearer ${DEEPSEEK_API_KEY}`,
+          'Content-Type': 'application/json'
+        }
+      }
+    );
+
+    const aiMessage = response.data.choices[0]?.message?.content;
+    
+    if (aiMessage) {
+      // Add AI response to history
+      conversationHistory.push({ role: 'assistant', content: aiMessage });
+      
+      // Limit conversation history to last 10 messages to prevent token limit issues
+      if (conversationHistory.length > 11) { // 11 includes system prompt
+        conversationHistory = [
+          conversationHistory[0],
+          ...conversationHistory.slice(-10)
+        ];
+      }
+      
+      return aiMessage;
+    }
+
+    return null;
+  } catch (error) {
+    console.error('Error calling DeepSeek AI:', error);
     return null;
   }
-
-  console.log('Attempting AI response for message:', message);
-
-  let retries = 0;
-  while (retries < MAX_RETRIES) {
-    try {
-      const requestBody = {
-        message,
-        model: 'command',
-        preamble: SYSTEM_PROMPT,
-        conversation_id: 'automotive-chat',
-        temperature: 0.7,
-        max_tokens: 200,
-        return_chatlog: false,
-        stream: false
-      };
-
-      console.log(`Sending request to Cohere API (attempt ${retries + 1}/${MAX_RETRIES})`);
-
-      const response = await fetch(COHERE_API_URL, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${API_KEY}`,
-          'Cohere-Version': '2022-12-06'
-        },
-        body: JSON.stringify(requestBody)
-      });
-
-      if (response.status === 429) {
-        console.log(`Rate limit reached. Waiting ${RETRY_DELAY/1000} seconds before retry...`);
-        await sleep(RETRY_DELAY);
-        retries++;
-        continue;
-      }
-
-      if (!response.ok) {
-        const errorText = await response.text();
-        console.error('AI API error:', {
-          status: response.status,
-          statusText: response.statusText,
-          error: errorText
-        });
-        return null;
-      }
-
-      const data = await response.json();
-      console.log('Received AI response:', data);
-
-      if (!data.text) {
-        console.error('Invalid response format from AI API:', data);
-        return null;
-      }
-
-      const generatedText = data.text.trim();
-      console.log('Successfully generated AI response:', generatedText);
-      return generatedText;
-    } catch (error) {
-      console.error('AI service error:', error);
-      if (retries < MAX_RETRIES - 1) {
-        console.log(`Retrying in ${RETRY_DELAY/1000} seconds...`);
-        await sleep(RETRY_DELAY);
-        retries++;
-      } else {
-        return null;
-      }
-    }
-  }
-
-  console.log('Max retries reached. Falling back to default response.');
-  return null;
 }
 
-// Function to enhance response with automotive context
-export function enhanceResponse(aiResponse: string, context: string): string {
-  // The response from Cohere is already automotive-focused, just clean it up
-  return aiResponse
-    .replace(/\n+/g, ' ')
-    .replace(/\s+/g, ' ')
-    .trim();
+// Enhance response with automotive context if needed
+export function enhanceResponse(response: string, context: string = 'general'): string {
+  // Already using automotive-focused system prompt, so minimal enhancement needed
+  return response.trim();
 }
 
-// Function to check if response is automotive related
-export function isAutomotiveRelated(text: string): boolean {
-  // Cohere responses will always be automotive related due to the preamble
-  return true;
-} 
+// Export conversation history for external use if needed
+export const getConversationHistory = () => [...conversationHistory];
+*/
+
+// Temporary exports during maintenance
+export const clearConversation = () => {};
+export const getAIResponse = async () => "Our chat service is currently undergoing maintenance. Please call us at +232 78590287 for assistance.";
+export const enhanceResponse = (response: string) => response;
+export const getConversationHistory = () => []; 

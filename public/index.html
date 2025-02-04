@@ -2,94 +2,154 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
-    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
-    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+    <!-- Performance Optimizations -->
+    <meta http-equiv="x-dns-prefetch-control" content="on">
+    <link rel="dns-prefetch" href="https://fonts.googleapis.com">
+    <link rel="dns-prefetch" href="https://fonts.gstatic.com">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    
+    <!-- Primary Meta Tags -->
+    <title>Cool Car Auto Garage - Premier Auto Service in Freetown</title>
+    <meta name="title" content="Cool Car Auto Garage - Premier Auto Service in Freetown">
+    <meta name="description" content="Expert auto repair and maintenance services in Freetown. Specializing in European and Japanese vehicles with certified mechanics and state-of-the-art diagnostics.">
+    <meta name="keywords" content="auto repair, car service, mechanic, Freetown, Sierra Leone, Mercedes, BMW, Toyota, car maintenance">
+    <meta name="author" content="Cool Car Auto Garage">
+    <meta name="robots" content="index, follow">
+
+    <!-- Favicon Configuration -->
+    <!-- Large Icons First -->
+    <link rel="icon" href="/favicon/web-app-manifest-512x512.png" type="image/png" sizes="512x512">
+    <link rel="icon" href="/favicon/web-app-manifest-192x192.png" type="image/png" sizes="192x192">
+    <link rel="icon" href="/favicon/favicon-96x96.png" type="image/png" sizes="96x96">
+    <!-- Vector version for scalability -->
+    <link rel="icon" href="/favicon/favicon.svg" type="image/svg+xml">
+    <!-- Fallback favicon -->
+    <link rel="icon" href="/favicon.ico" sizes="32x32">
+    <!-- Apple Touch Icon -->
+    <link rel="apple-touch-icon" href="/favicon/apple-touch-icon.png">
+    <!-- Web Manifest -->
     <link rel="manifest" href="/site.webmanifest">
-    <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#1E40AF">
-    <meta name="msapplication-TileColor" content="#1E40AF">
+
+    <!-- Preload critical assets -->
+    <link rel="preload" as="image" href="/Best-Mechanic-in-freetown.webp" type="image/webp">
+    
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://coolcarautogarage.com/">
+    <meta property="og:title" content="Cool Car Auto Garage - Premier Auto Service in Freetown">
+    <meta property="og:description" content="Expert auto repair and maintenance services in Freetown. Specializing in European and Japanese vehicles with certified mechanics and state-of-the-art diagnostics.">
+    <meta property="og:image" content="/Best-Mechanic-in-freetown.webp">
+
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:url" content="https://coolcarautogarage.com/">
+    <meta property="twitter:title" content="Cool Car Auto Garage - Premier Auto Service in Freetown">
+    <meta property="twitter:description" content="Expert auto repair and maintenance services in Freetown. Specializing in European and Japanese vehicles with certified mechanics and state-of-the-art diagnostics.">
+    <meta property="twitter:image" content="/Best-Mechanic-in-freetown.webp">
+
+    <!-- Theme Color -->
     <meta name="theme-color" content="#1E40AF">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Cool Car Auto Garage</title>
+    <meta name="msapplication-TileColor" content="#1E40AF">
 
-    <!-- update the version number as needed -->
-    <script defer src="/__/firebase/11.2.0/firebase-app-compat.js"></script>
-    <!-- include only the Firebase features as you need -->
-    <script defer src="/__/firebase/11.2.0/firebase-auth-compat.js"></script>
-    <script defer src="/__/firebase/11.2.0/firebase-database-compat.js"></script>
-    <script defer src="/__/firebase/11.2.0/firebase-firestore-compat.js"></script>
-    <script defer src="/__/firebase/11.2.0/firebase-functions-compat.js"></script>
-    <script defer src="/__/firebase/11.2.0/firebase-messaging-compat.js"></script>
-    <script defer src="/__/firebase/11.2.0/firebase-storage-compat.js"></script>
-    <script defer src="/__/firebase/11.2.0/firebase-analytics-compat.js"></script>
-    <script defer src="/__/firebase/11.2.0/firebase-remote-config-compat.js"></script>
-    <script defer src="/__/firebase/11.2.0/firebase-performance-compat.js"></script>
-    <!-- 
-      initialize the SDK after all desired features are loaded, set useEmulator to false
-      to avoid connecting the SDK to running emulators.
-    -->
-    <script defer src="/__/firebase/init.js?useEmulator=true"></script>
+    <!-- Resource Hints -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin>
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="preconnect" href="https://firestore.googleapis.com" crossorigin>
+    
+    <!-- Firebase SDKs with async loading -->
+    <script async src="/__/firebase/11.2.0/firebase-app-compat.js"></script>
+    <script async src="/__/firebase/11.2.0/firebase-auth-compat.js"></script>
+    <script async src="/__/firebase/11.2.0/firebase-firestore-compat.js"></script>
+    <script async src="/__/firebase/11.2.0/firebase-analytics-compat.js"></script>
+    <script async src="/__/firebase/init.js?useEmulator=true"></script>
 
-    <style media="screen">
-      body { background: #ECEFF1; color: rgba(0,0,0,0.87); font-family: Roboto, Helvetica, Arial, sans-serif; margin: 0; padding: 0; }
-      #message { background: white; max-width: 360px; margin: 100px auto 16px; padding: 32px 24px; border-radius: 3px; }
-      #message h2 { color: #ffa100; font-weight: bold; font-size: 16px; margin: 0 0 8px; }
-      #message h1 { font-size: 22px; font-weight: 300; color: rgba(0,0,0,0.6); margin: 0 0 16px;}
-      #message p { line-height: 140%; margin: 16px 0 24px; font-size: 14px; }
-      #message a { display: block; text-align: center; background: #039be5; text-transform: uppercase; text-decoration: none; color: white; padding: 16px; border-radius: 4px; }
-      #message, #message a { box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24); }
-      #load { color: rgba(0,0,0,0.4); text-align: center; font-size: 13px; }
-      @media (max-width: 600px) {
-        body, #message { margin-top: 0; background: white; box-shadow: none; }
-        body { border-top: 16px solid #ffa100; }
+    <!-- Structured Data -->
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "AutoRepair",
+        "name": "Cool Car Auto Garage",
+        "image": "/Best-Mechanic-in-freetown.webp",
+        "description": "Expert auto repair and maintenance services in Freetown. Specializing in European and Japanese vehicles with certified mechanics and state-of-the-art diagnostics.",
+        "address": {
+          "@type": "PostalAddress",
+          "streetAddress": "156 Bai Bureh Road",
+          "addressLocality": "Freetown",
+          "addressCountry": "Sierra Leone"
+        },
+        "geo": {
+          "@type": "GeoCoordinates",
+          "latitude": "8.4897",
+          "longitude": "-13.2317"
+        },
+        "openingHours": "Mo-Sa 08:00-18:00",
+        "telephone": "+23278590287",
+        "priceRange": "$$",
+        "servesCuisine": "Auto Repair Services"
+      }
+    </script>
+
+    <!-- Critical CSS -->
+    <style>
+      /* Add only critical CSS needed for initial render */
+      body {
+        margin: 0;
+        padding: 0;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+        background: #FFFFFF;
+        overflow-x: hidden;
+      }
+      #root {
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+      }
+      /* Add loading spinner for better UX */
+      .loading-spinner {
+        width: 50px;
+        height: 50px;
+        border: 3px solid #f3f3f3;
+        border-top: 3px solid #1E40AF;
+        border-radius: 50%;
+        animation: spin 1s linear infinite;
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+      }
+      @keyframes spin {
+        0% { transform: translate(-50%, -50%) rotate(0deg); }
+        100% { transform: translate(-50%, -50%) rotate(360deg); }
       }
     </style>
   </head>
   <body>
-    <div id="message">
-      <h2>Welcome</h2>
-      <h1>Firebase Hosting Setup Complete</h1>
-      <p>You're seeing this because you've successfully setup Firebase Hosting. Now it's time to go build something extraordinary!</p>
-      <a target="_blank" href="https://firebase.google.com/docs/hosting/">Open Hosting Documentation</a>
+    <div id="root">
+      <!-- Loading spinner for better initial load experience -->
+      <div class="loading-spinner"></div>
     </div>
-    <p id="load">Firebase SDK Loading&hellip;</p>
 
+    <!-- Inline script for performance monitoring -->
     <script>
-      document.addEventListener('DOMContentLoaded', function() {
-        const loadEl = document.querySelector('#load');
-        // // 🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥
-        // // The Firebase SDK is initialized and available here!
-        //
-        // firebase.auth().onAuthStateChanged(user => { });
-        // firebase.database().ref('/path/to/ref').on('value', snapshot => { });
-        // firebase.firestore().doc('/foo/bar').get().then(() => { });
-        // firebase.functions().httpsCallable('yourFunction')().then(() => { });
-        // firebase.messaging().requestPermission().then(() => { });
-        // firebase.storage().ref('/path/to/ref').getDownloadURL().then(() => { });
-        // firebase.analytics(); // call to activate
-        // firebase.analytics().logEvent('tutorial_completed');
-        // firebase.performance(); // call to activate
-        //
-        // // 🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥
+      // Performance monitoring
+      if (window.performance) {
+        const timing = window.performance.timing;
+        window.addEventListener('load', () => {
+          setTimeout(() => {
+            const loadTime = timing.loadEventEnd - timing.navigationStart;
+            console.log('Page load time:', loadTime);
+          }, 0);
+        });
+      }
 
-        try {
-          let app = firebase.app();
-          let features = [
-            'auth', 
-            'database', 
-            'firestore',
-            'functions',
-            'messaging', 
-            'storage', 
-            'analytics', 
-            'remoteConfig',
-            'performance',
-          ].filter(feature => typeof app[feature] === 'function');
-          loadEl.textContent = `Firebase SDK loaded with ${features.join(', ')}`;
-        } catch (e) {
-          console.error(e);
-          loadEl.textContent = 'Error loading the Firebase SDK, check the console.';
-        }
+      // Remove loading spinner once content is loaded
+      window.addEventListener('load', () => {
+        const spinner = document.querySelector('.loading-spinner');
+        if (spinner) spinner.style.display = 'none';
       });
     </script>
   </body>
