@@ -41,16 +41,16 @@ export const getInitialGreeting = (): string => {
 // Process user message and generate response using DeepSeek AI
 export async function processMessage(message: string): Promise<string> {
   try {
-    const aiResponse = await getAIResponse(message);
+    const aiResponse = await getAIResponse();
     if (!aiResponse) {
       return addPersonality("I apologize, but I'm having trouble understanding. Could you please rephrase your question?");
     }
     
-    const enhancedResponse = enhanceResponse(aiResponse, 'automotive');
-    storeConversation(message, enhancedResponse, 'automotive');
+    const enhancedResponse = enhanceResponse(aiResponse);
+    storeConversation(message, enhancedResponse, 'automotive', 'neutral');
     return addPersonality(enhancedResponse);
   } catch (error) {
     console.error('Error processing message:', error);
-    return "I apologize, but I'm having trouble processing your request right now. Please try again later.";
+    return addPersonality("I'm sorry, but I'm experiencing technical difficulties. Please try again later.");
   }
-} 
+}

@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import { ChevronDown, Star, Wrench, Clock, Shield, Award, MapPin, Phone, Mail, ArrowRight, Eye, Target, Heart, Settings, CheckCircle } from 'lucide-react';
+import { Wrench, Clock, Shield, Award, MapPin, Phone, Mail, ArrowRight } from 'lucide-react';
 import TestimonialSection from '../components/TestimonialSection';
 import SEO from '../components/SEO';
 

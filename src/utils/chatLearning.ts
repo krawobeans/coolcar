@@ -147,15 +147,7 @@ export function findSimilarConversations(
 /**
  * Calculate relevance of a text to a query
  */
-function calculateRelevance(text: string, query: string): number {
-  // Calculate base similarity
-  const baseSimilarity = calculateSimilarity(text, query);
-  
-  // Count automotive keywords
-  const keywordCount = automotiveKeywords.reduce((count, keyword) => 
-    count + (text.toLowerCase().match(new RegExp(keyword, 'g')) || []).length, 0
-  );
-  
-  // Combine metrics (70% similarity, 30% keyword density)
-  return (baseSimilarity * 0.7) + (Math.min(keywordCount / 10, 1) * 0.3);
+export function calculateRelevance(query: string, conversation: string): number {
+  // Implementation
+  return 0;
 }
