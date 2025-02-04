@@ -24,7 +24,7 @@ export default function AboutPage() {
                 <div className="relative group">
                   <div className="absolute -inset-1 bg-gradient-to-r from-blue-600 to-purple-600 rounded-2xl blur opacity-25 group-hover:opacity-40 transition duration-300"></div>
                   <img
-                    src="/best-mechanic-in-freetown.webp"
+                    src="public/best-mechanic-in-freetown.webp"
                     alt="Mamoud Bah - Chief Engineer"
                     className="relative rounded-2xl shadow-2xl w-full h-[280px] md:h-[380px] object-cover"
                   />
@@ -276,7 +276,7 @@ export default function AboutPage() {
               <div className="grid grid-cols-2 md:grid-cols-4 gap-8 md:gap-12">
                 <div className="transform hover:scale-110 transition-transform duration-300">
                   <img 
-                    src="/images/mercedes-logo.png" 
+                    src="public/images/mercedes-logo.png" 
                     alt="Mercedes-Benz" 
                     className="w-full h-full object-contain opacity-80 hover:opacity-100 transition-opacity duration-300"
                   />
@@ -284,7 +284,7 @@ export default function AboutPage() {
 
                 <div className="transform hover:scale-110 transition-transform duration-300">
                   <img 
-                    src="/images/toyota-logo.png" 
+                    src="public/images/toyota-logo.png" 
                     alt="Toyota" 
                     className="w-full h-full object-contain opacity-80 hover:opacity-100 transition-opacity duration-300"
                   />
@@ -292,7 +292,7 @@ export default function AboutPage() {
 
                 <div className="transform hover:scale-110 transition-transform duration-300">
                   <img 
-                    src="/images/porsche-logo.png" 
+                    src="public/images/porsche-logo.png" 
                     alt="Porsche" 
                     className="w-full h-full object-contain opacity-80 hover:opacity-100 transition-opacity duration-300"
                   />
@@ -300,7 +300,7 @@ export default function AboutPage() {
 
                 <div className="transform hover:scale-110 transition-transform duration-300">
                   <img 
-                    src="/images/nissan-logo.png" 
+                    src="public/images/nissan-logo.png" 
                     alt="Nissan" 
                     className="w-full h-full object-contain opacity-80 hover:opacity-100 transition-opacity duration-300"
                   />
