@@ -18,8 +18,9 @@ export default defineConfig({
     minify: 'terser',
     chunkSizeWarningLimit: 1000,
     outDir: 'dist',
-    assetsDir: 'assets',
+    assetsDir: '.',
     emptyOutDir: true,
+    copyPublicDir: true
   },
   resolve: {
     alias: {
@@ -45,5 +46,6 @@ export default defineConfig({
     include: ['react', 'react-dom', 'react-router-dom', 'lucide-react'],
     exclude: [],
   },
-  base: '/',
+  publicDir: 'public',
+  base: '/'
 });
