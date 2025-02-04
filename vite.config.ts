@@ -13,18 +13,25 @@ export default defineConfig({
           'react-vendor': ['react', 'react-dom', 'react-router-dom'],
           'lucide-vendor': ['lucide-react'],
         },
+        entryFileNames: 'assets/[name].[hash].js',
+        chunkFileNames: 'assets/[name].[hash].js',
         assetFileNames: (assetInfo) => {
-          if (assetInfo.name) {
-            return assetInfo.name;
+          if (!assetInfo.name) return 'assets/[name].[hash].[ext]';
+          
+          if (/\.(png|jpe?g|gif|svg|webp|ico)$/i.test(assetInfo.name)) {
+            return `images/[name].[hash].[ext]`;
           }
-          return '[name].[hash].[ext]';
+          if (/\.css$/i.test(assetInfo.name)) {
+            return `css/[name].[hash].[ext]`;
+          }
+          return `assets/[name].[hash].[ext]`;
         }
       },
     },
     minify: 'terser',
     chunkSizeWarningLimit: 1000,
     outDir: 'dist',
-    assetsDir: '.',
+    assetsDir: 'assets',
     emptyOutDir: true,
     copyPublicDir: true,
     assetsInlineLimit: 0
