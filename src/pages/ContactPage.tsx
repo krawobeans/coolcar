@@ -1,6 +1,9 @@
 import SEO from '../components/SEO';
 import ContactForm from '../components/ContactForm';
-import { MapPin, Phone, Mail, Clock } from 'lucide-react';
+import { MapPin } from 'lucide-react';
+import { Phone } from 'lucide-react';
+import { Mail } from 'lucide-react';
+import { Clock } from 'lucide-react';
 
 export default function ContactPage() {
   return (

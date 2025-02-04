@@ -1,5 +1,15 @@
 import { useState, FormEvent } from 'react';
-import { Calendar, Clock, Car, User, Mail, Phone, MessageSquare, Wrench, Loader2, CheckCircle, AlertCircle } from 'lucide-react';
+import { Calendar } from 'lucide-react';
+import { Clock } from 'lucide-react';
+import { Car } from 'lucide-react';
+import { User } from 'lucide-react';
+import { Mail } from 'lucide-react';
+import { Phone } from 'lucide-react';
+import { MessageSquare } from 'lucide-react';
+import { Wrench } from 'lucide-react';
+import { Loader2 } from 'lucide-react';
+import { CheckCircle } from 'lucide-react';
+import { AlertCircle } from 'lucide-react';
 
 export default function BookingForm() {
   const [status, setStatus] = useState({
