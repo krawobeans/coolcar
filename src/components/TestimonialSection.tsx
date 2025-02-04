@@ -1,7 +1,8 @@
-import React from 'react';
-import { Star, Quote } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import { Star, Quote, Loader2 } from 'lucide-react';
 import { useReviews } from '../context/ReviewContext';
 import { Link } from 'react-router-dom';
+import type { Review } from '../lib/supabase';
 
 interface TestimonialSectionProps {
   variant?: 'compact' | 'full';
@@ -17,7 +18,26 @@ export default function TestimonialSection({
   title = "What Our Clients Say"
 }: TestimonialSectionProps) {
   const { getTopRatedReviews } = useReviews();
-  const testimonials = getTopRatedReviews(count);
+  const [testimonials, setTestimonials] = useState<Review[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    async function loadTestimonials() {
+      try {
+        setLoading(true);
+        const reviews = await getTopRatedReviews(count);
+        setTestimonials(reviews);
+        setError(null);
+      } catch (err) {
+        console.error('Error loading testimonials:', err);
+        setError('Failed to load testimonials');
+      } finally {
+        setLoading(false);
+      }
+    }
+    loadTestimonials();
+  }, [count, getTopRatedReviews]);
 
   const renderStars = (rating: number) => {
     return Array.from({ length: 5 }, (_, index) => (
@@ -29,13 +49,43 @@ export default function TestimonialSection({
     ));
   };
 
+  if (loading) {
+    return (
+      <section className="py-16 lg:py-32 relative overflow-hidden">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <h2 className="text-2xl lg:text-5xl font-bold text-center mb-8 lg:mb-16 text-transparent bg-clip-text bg-gradient-to-r from-blue-900 to-blue-600">
+            {title}
+          </h2>
+          <div className="flex justify-center items-center min-h-[200px]">
+            <Loader2 className="w-8 h-8 animate-spin text-blue-600" />
+          </div>
+        </div>
+      </section>
+    );
+  }
+
+  if (error) {
+    return (
+      <section className="py-16 lg:py-32 relative overflow-hidden">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <h2 className="text-2xl lg:text-5xl font-bold text-center mb-8 lg:mb-16 text-transparent bg-clip-text bg-gradient-to-r from-blue-900 to-blue-600">
+            {title}
+          </h2>
+          <div className="text-center text-gray-600">
+            {error}
+          </div>
+        </div>
+      </section>
+    );
+  }
+
   if (variant === 'compact' && testimonials.length > 0) {
     return (
       <section className="py-16 lg:py-32 relative overflow-hidden">
         <div className="absolute -top-40 -right-40 w-[500px] h-[500px] bg-gradient-to-bl from-blue-200 to-purple-100 rounded-full mix-blend-multiply filter blur-[96px] opacity-70 animate-blob"></div>
         <div className="absolute -bottom-40 -left-40 w-[500px] h-[500px] bg-gradient-to-tr from-purple-200 to-blue-100 rounded-full mix-blend-multiply filter blur-[96px] opacity-70 animate-blob animation-delay-2000"></div>
         
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <h2 className="text-2xl lg:text-5xl font-bold text-center mb-8 lg:mb-16 text-transparent bg-clip-text bg-gradient-to-r from-blue-900 to-blue-600">
             {title}
           </h2>
@@ -43,7 +93,7 @@ export default function TestimonialSection({
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 lg:gap-12">
             {testimonials.map((review, index) => (
               <div 
-                key={index}
+                key={review.id}
                 className="bg-white rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2 relative group"
               >
                 <div className="absolute inset-0 bg-gradient-to-r from-blue-600 to-purple-600 opacity-10 rounded-xl"></div>
@@ -59,7 +109,9 @@ export default function TestimonialSection({
                       <h3 className="font-semibold text-transparent bg-clip-text bg-gradient-to-r from-blue-900 to-blue-600">
                         {review.name}
                       </h3>
-                      <p className="text-sm text-gray-600">{review.position}</p>
+                      {review.position && (
+                        <p className="text-sm text-gray-600">{review.position}</p>
+                      )}
                       <div className="flex mt-1">
                         {renderStars(review.rating)}
                       </div>
@@ -100,9 +152,9 @@ export default function TestimonialSection({
           </h2>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-12">
-            {testimonials.map((review, index) => (
+            {testimonials.map((review) => (
               <div 
-                key={index}
+                key={review.id}
                 className="bg-white rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2 relative group"
               >
                 <div className="absolute inset-0 bg-gradient-to-r from-blue-600 to-purple-600 opacity-10 rounded-xl"></div>
@@ -115,7 +167,9 @@ export default function TestimonialSection({
                       <h3 className="font-semibold text-transparent bg-clip-text bg-gradient-to-r from-blue-900 to-blue-600">
                         {review.name}
                       </h3>
-                      <p className="text-sm text-gray-600">{review.position}</p>
+                      {review.position && (
+                        <p className="text-sm text-gray-600">{review.position}</p>
+                      )}
                       <div className="flex mt-1">
                         {renderStars(review.rating)}
                       </div>
