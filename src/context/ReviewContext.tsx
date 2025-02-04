@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
+import { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 import { Review, getReviews, addReview as addReviewToDb, getTopRatedReviews as getTopRated } from '../lib/supabase';
 
 interface ReviewContextType {

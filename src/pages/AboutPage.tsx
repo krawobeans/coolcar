@@ -1,6 +1,5 @@
-import React from 'react';
 import { Link } from 'react-router-dom';
-import { Award, Clock, MapPin } from 'lucide-react';
+import { ArrowRight, Award, CheckCircle, Clock, Eye, Heart, Settings, Star, Target, Wrench } from 'lucide-react';
 import TestimonialSection from '../components/TestimonialSection';
 
 export default function AboutPage() {

@@ -1,3 +1,4 @@
+/*
 import { 
   storeConversation, 
   findSimilarConversations
@@ -54,3 +55,4 @@ export async function processMessage(message: string): Promise<string> {
     return addPersonality("I'm sorry, but I'm experiencing technical difficulties. Please try again later.");
   }
 }
+*/
