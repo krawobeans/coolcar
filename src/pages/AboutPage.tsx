@@ -292,7 +292,7 @@ export default function AboutPage() {
 
                 <div className="transform hover:scale-110 transition-transform duration-300">
                   <img 
-                    src="\porsche logo.png" 
+                    src="/porsche logo.png" 
                     alt="Porsche" 
                     className="w-full h-full object-contain opacity-80 hover:opacity-100 transition-opacity duration-300"
                   />
