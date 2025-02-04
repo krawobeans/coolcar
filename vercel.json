@@ -1,12 +1,38 @@
 {
-  "rewrites": [
+  "version": 2,
+  "builds": [
     {
-      "source": "/(.*)",
-      "destination": "/index.html"
+      "src": "package.json",
+      "use": "@vercel/static-build",
+      "config": {
+        "distDir": "dist"
+      }
     }
   ],
-  "github": {
-    "enabled": true,
-    "silent": true
-  }
+  "routes": [
+    {
+      "src": "^/assets/(.*)",
+      "dest": "/assets/$1"
+    },
+    {
+      "src": "^/favicon/(.*)",
+      "dest": "/favicon/$1"
+    },
+    {
+      "src": "^/manifest.json",
+      "dest": "/manifest.json"
+    },
+    {
+      "src": "^/robots.txt",
+      "dest": "/robots.txt"
+    },
+    {
+      "src": "^/site.webmanifest",
+      "dest": "/site.webmanifest"
+    },
+    {
+      "src": ".*",
+      "dest": "/index.html"
+    }
+  ]
 } 

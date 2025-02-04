@@ -17,6 +17,9 @@ export default defineConfig({
     },
     minify: 'terser',
     chunkSizeWarningLimit: 1000,
+    outDir: 'dist',
+    assetsDir: 'assets',
+    emptyOutDir: true,
   },
   resolve: {
     alias: {
