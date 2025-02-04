@@ -13,6 +13,12 @@ export default defineConfig({
           'react-vendor': ['react', 'react-dom', 'react-router-dom'],
           'lucide-vendor': ['lucide-react'],
         },
+        assetFileNames: (assetInfo) => {
+          if (assetInfo.name) {
+            return assetInfo.name;
+          }
+          return '[name].[hash].[ext]';
+        }
       },
     },
     minify: 'terser',
@@ -20,7 +26,8 @@ export default defineConfig({
     outDir: 'dist',
     assetsDir: '.',
     emptyOutDir: true,
-    copyPublicDir: true
+    copyPublicDir: true,
+    assetsInlineLimit: 0
   },
   resolve: {
     alias: {
